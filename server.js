@@ -60,20 +60,4 @@ app.get('/ResidentProfile/:id', function(req, res) {
   })
 });
 
-app.post('/createUser', function(req, res) {
-    const user = {
-      "firstName": req.body.firstName,
-      "lastName": req.body.lastName,
-      "nurseCode": req.body.nurseCode,
-      "password": req.body.password
-    };
-    console.log(user);
-
-    db.User.findOrCreate({where: {firstName: user.firstName, lastName: user.lastName, nurseCode: user.nurseCode, password: user.password}})
-    .then(([userObj, created]) => {
-      res.status(200);
-      res.send("User Created successfully");
-    });
-});
-
 app.listen(port, () => console.log(`App listening on port ${port}!`));
