@@ -4,6 +4,7 @@ const User = db.User;
 
 checkDuplicateUsernameOrEmail = (req, res, next) => {
     // Username
+    console.log("Starting Verify Nurse Code");
     User.findOne({
       where: {
         nurseCode:  req.body.nurseCode

@@ -3,6 +3,7 @@ const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.User;
 verifyToken = (req, res, next) => {
+  console.log("Starting Verify Token");
   let token = req.headers["x-access-token"] || req.cookies['x-access-token'];
   if (!token) {
     return res.status(403).send({

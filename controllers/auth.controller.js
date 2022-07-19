@@ -10,6 +10,7 @@ exports.signup = (req, res) => {
     var role = makeAdmin? "admin":"nurse";
 
     //encrypt password
+    console.log("Starting Encrypt Password");
     const saltRounds = 10;
     var oPasswordPromise = new Promise((resolve, reject) => {
         bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
