@@ -37,17 +37,4 @@ app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 
-// simple route
-app.get('/', function(req, res) {
-      res.render('login');
-});
-
-app.get('/goToRegister', function(req, res) {
-  res.writeHead(302, {location: '/register'});
-});
-
-app.get('/register', function(req, res) {
-  res.render('register');
-});
-
 app.listen(port, () => console.log(`App listening on port ${port}!`));
