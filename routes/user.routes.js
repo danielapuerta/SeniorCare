@@ -30,7 +30,7 @@ module.exports = function(app) {
   }]);
 
   // Create new Resident
-  app.post('/api/createResident', [ authJwt.verifyToken, function(req, res) {
+  app.post('/api/createResident', [ authJwt.verifyToken, authJwt.isAdmin,function(req, res) {
     const user = {
       "Name": req.body.Name,
       "age": req.body.age,
@@ -42,5 +42,16 @@ module.exports = function(app) {
       res.status(200);
       res.send("Resident Created successfully");
     });
+  }]);
+
+  // view resident profile
+  app.get('/ResidentProfile/:id', [authJwt.verifyToken, function(req, res) {
+    db.Residents.findAll({where: { id:req.params.id},order: [['createdAt', 'DESC']], limit: 1})
+    .then(residentObj => {
+      var parsedResidentObject = residentObj[0].dataValues;
+      res.render('resident', {
+        residentObj: parsedResidentObject
+      });
+    })
   }]);
 };

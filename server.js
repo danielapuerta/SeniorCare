@@ -50,14 +50,4 @@ app.get('/register', function(req, res) {
   res.render('register');
 });
 
-app.get('/ResidentProfile/:id', function(req, res) {
-  db.Residents.findAll({where: { id:req.params.id},order: [['createdAt', 'DESC']], limit: 1})
-  .then(residentObj => {
-    var parsedResidentObject = residentObj[0].dataValues;
-    res.render('resident', {
-      residentObj: parsedResidentObject
-    });
-  })
-});
-
 app.listen(port, () => console.log(`App listening on port ${port}!`));
