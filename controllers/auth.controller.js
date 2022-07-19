@@ -42,7 +42,8 @@ exports.signup = (req, res) => {
             
             userObj.dataValues.accessToken = token;
             var returnUser = userObj.dataValues;
-            res.cookie('x-access-token',token, options)
+            res.cookie('x-access-token',token, options);
+            res.cookie('role', userObj.dataValues.role, options);
             res.status(200);
             res.send({
                 returnUser
@@ -89,7 +90,8 @@ exports.signup = (req, res) => {
         
         userObj.dataValues.accessToken = token;
         var returnUser = userObj.dataValues;
-        res.cookie('x-access-token',token, options) 
+        res.cookie('x-access-token',token, options);
+        res.cookie('role', userObj.dataValues.role, options);
         res.status(200).send({
             returnUser
         });
