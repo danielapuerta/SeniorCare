@@ -76,18 +76,4 @@ app.post('/createUser', function(req, res) {
     });
 });
 
-app.post('/api/createResident', function(req, res) {
-  const user = {
-    "Name": req.body.Name,
-    "age": req.body.age,
-    "RoomNum": req.body.RoomNum
-  };
-
-  db.Residents.findOrCreate({where: {Name: user.Name, age: user.age, RoomNum: user.RoomNum}})
-  .then(([residentObj, created]) => {
-    res.status(200);
-    res.send("Resident Created successfully");
-  });
-});
-
 app.listen(port, () => console.log(`App listening on port ${port}!`));

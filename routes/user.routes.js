@@ -28,4 +28,19 @@ module.exports = function(app) {
       });
     })
   }]);
+
+  // Create new Resident
+  app.post('/api/createResident', [ authJwt.verifyToken, function(req, res) {
+    const user = {
+      "Name": req.body.Name,
+      "age": req.body.age,
+      "RoomNum": req.body.RoomNum
+    };
+  
+    db.Residents.findOrCreate({where: {Name: user.Name, age: user.age, RoomNum: user.RoomNum}})
+    .then(([residentObj, created]) => {
+      res.status(200);
+      res.send("Resident Created successfully");
+    });
+  }]);
 };
