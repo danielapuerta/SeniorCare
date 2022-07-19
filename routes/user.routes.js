@@ -34,11 +34,13 @@ module.exports = function(app) {
     });
 
   //Residents list
-  app.get('/Residents',[authJwt.verifyToken,  function(req, res) {
+  app.get('/Residents',[authJwt.verifyToken, function(req, res) {
+    let isAdmin = req.cookies['role'] == 'admin';
     db.Residents.findAll({order: [['createdAt', 'DESC']]})
     .then(residentObjs => {
       res.render('residents', {
-        residentObjs: residentObjs
+        residentObjs: residentObjs,
+        isAdmin: isAdmin
       });
     })
   }]);
