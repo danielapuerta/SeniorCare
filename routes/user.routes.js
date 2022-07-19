@@ -19,6 +19,20 @@ module.exports = function(app) {
     [authJwt.verifyToken, authJwt.isAdmin, controller.adminContent],
   );
 
+  //login 
+  app.get('/', function(req, res) {
+      res.render('login');
+    });
+  
+  //register 
+  app.get('/goToRegister', function(req, res) {
+    res.writeHead(302, {location: '/register'});
+    });
+  
+  app.get('/register', function(req, res) {
+    res.render('register');
+    });
+
   //Residents list
   app.get('/Residents',[authJwt.verifyToken,  function(req, res) {
     db.Residents.findAll({order: [['createdAt', 'DESC']]})
@@ -36,7 +50,6 @@ module.exports = function(app) {
       "age": req.body.age,
       "RoomNum": req.body.RoomNum
     };
-  
     db.Residents.findOrCreate({where: {Name: user.Name, age: user.age, RoomNum: user.RoomNum}})
     .then(([residentObj, created]) => {
       res.status(200);
