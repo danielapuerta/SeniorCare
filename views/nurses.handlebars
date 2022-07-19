@@ -1,0 +1,50 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col" data-class="hidden" class="hidden">ID</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Nurse Code</th>
+      <th scope="col">Role</th>
+      <th scope="col">Delete</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {{#each nurseObjs}}
+      <tr data={{dataValues}} class="table-row">
+        <td class="hidden">{{dataValues.id}}</td>
+        <td>{{dataValues.firstName}}</td>
+        <td>{{dataValues.lastName}}</td>
+        <td>{{dataValues.nurseCode}}</td>
+        <td>{{dataValues.role}}</td>
+        <td>
+            {{#if isAdmin}}
+            <button id="makeAdmin" type="button" class="btn btn-success btn-sm">Admin</button>
+            {{/if}}
+            {{#if notAdmin}}
+            <button id="makeAdmin" type="button" class="btn btn-success btn-sm">Basic User</button>
+            {{/if}}
+        <button id="deleteUser" type="button" class="btn btn-danger btn-sm">Delete User</button></td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<script>
+  $('#makeAdmin').click(function(e){
+        e.preventDefault();
+        
+
+        $.ajax({
+            type: "POST",
+            url: "/api/createResident",
+            data: resident,
+            success: function( msg ) {
+                console.log('server response is', msg.status);
+                window.location.href = '/Residents';
+            },
+        });
+    })
+
+</script>

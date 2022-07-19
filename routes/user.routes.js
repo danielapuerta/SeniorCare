@@ -69,4 +69,20 @@ module.exports = function(app) {
       });
     })
   }]);
+
+  //view nurse list
+    app.get('/Nurses',[authJwt.verifyToken, function(req, res) {
+      let isAdmin = req.cookies['role'] == 'admin';
+      let notAdmin = req.cookies['role'] != 'admin';
+      db.User.findAll({order: [['createdAt', 'DESC']]})
+      .then(nurseObjs => {
+        res.render('nurses', {
+          nurseObjs: nurseObjs,
+          isAdmin: isAdmin,
+          notAdmin: notAdmin
+        });
+      })
+    }]);
+
+
 };

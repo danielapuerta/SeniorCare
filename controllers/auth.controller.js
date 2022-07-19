@@ -105,3 +105,6 @@ exports.signup = (req, res) => {
         res.status(500).send({ message: err.message });
     });
   };
+//   exports.makeAdmin = (req, res) => {
+//     var idAdmin = 
+//   };
