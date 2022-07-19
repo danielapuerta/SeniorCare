@@ -28,8 +28,25 @@ exports.signup = (req, res) => {
     
         db.User.findOrCreate({where: {firstName: user.firstName, lastName: user.lastName, nurseCode: user.nurseCode, password: user.password, role: role}})
         .then(([userObj, created]) => {
-          res.status(200);
-          res.send("User Created successfully");
+           //Generate Token
+            var token = jwt.sign({ id: userObj.dataValues.id }, config.secret, {
+                expiresIn: 86400 // 24 hours
+            });
+
+            let options = {
+                path:"/",
+                sameSite:true,
+                maxAge: 1000 * 60 * 60 * 12, // would expire after 24 hours
+                httpOnly: true, // The cookie only accessible by the web server
+            }
+            
+            userObj.dataValues.accessToken = token;
+            var returnUser = userObj.dataValues;
+            res.cookie('x-access-token',token, options)
+            res.status(200);
+            res.send({
+                returnUser
+            });
         }).catch(err => {
             res.status(500).send({ message: err.message });
         });
