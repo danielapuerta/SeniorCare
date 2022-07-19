@@ -1,0 +1,83 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <form id="registerForm" class="form-horizontal pt-5">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="firstNameInput">First Name</label>
+                        <div class="col-md-4">
+                            <input id="firstNameInput" name="firstName" type="text" placeholder="Joe" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="lastNameInput">Last Name</label>
+                        <div class="col-md-4">
+                            <input id="lastNameInput" name="lastName" type="text" placeholder="Bloggs" class="form-control input-md" >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="nurseCodeInput">Nurse Code</label>
+                        <div class="col-md-4">
+                            <input id="nurseCodeInput" name="nurseCode" type="text" placeholder="12345" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="passwordInput">Password</label>
+                        <div class="col-md-4">
+                            <input id="passwordInput" name="password" type="text" placeholder="password1234" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="confirmPasswordInput">Confirm Password</label>
+                        <div class="col-md-4">
+                            <input id="confirmPasswordInput" name="confirmPassword" type="text" placeholder="password1234" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group pt-4">
+                        <label class="col-md-4 control-label" for="signInButton"></label>
+                        <div class="col-md-4">
+                            <button id="registerButton" name="registerButton" class="btn btn-primary">Register</button>
+                            <button id="cancelButton" name="cancelButton" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#registerButton').click(function(e){
+        e.preventDefault();
+        var user = {
+            firstName: $('input[name=firstName]').val(),
+            lastName: $('input[name=lastName]').val(),
+            nurseCode: $('input[name=nurseCode]').val(),
+            password: $('input[name=password]').val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/api/auth/signup",
+            data: user,
+            success: function( msg ) {
+                console.log('server response is', msg.status);
+                window.location.href = '/residents';
+            },
+        });
+    })
+
+    $('#cancelButton').click(function(e){
+        e.preventDefault();
+        window.location.href = '/';
+    })
+</script>
+    

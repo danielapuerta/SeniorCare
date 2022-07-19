@@ -1,0 +1,102 @@
+<!-- Modal -->
+<div class="modal fade" id="AddNewResidentModal" tabindex="-1" role="dialog" aria-labelledby="AddNewResidentModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="AddNewResidentModallLabel">Add New Resident</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row justify-content-center">
+              <div >
+                <form id="residentForm" class="form-horizontal">
+                        <fieldset>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="nameInput">Name</label>
+                                <div class="col-md-4">
+                                    <input id="nameInput" name="name" type="text" placeholder="Joe Bloggs" class="form-control input-md">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="ageInput">Age</label>
+                                <div class="col-md-4">
+                                    <input id="ageInput" name="age" type="text" placeholder="99" class="form-control input-md">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="roomInput">Room</label>
+                                <div class="col-md-4">
+                                    <input id="roomInput" name="room" type="text" placeholder="Room 1" class="form-control input-md">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id='addResidentButton' type="button" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Table --}}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col" data-class='hidden' class='hidden'>ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Age</th>
+      <th scope="col">Room Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each residentObjs}}
+    <tr data={{dataValues}}  class="table-row">
+      <td class='hidden'>{{dataValues.id}}</td>
+      <td>{{dataValues.Name}}</td>
+      <td>{{dataValues.age}}</td>
+      <td>{{dataValues.RoomNum}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddNewResidentModal">Add New Resident</button>
+
+
+<script>
+
+  $('#addResidentButton').click(function(e){
+        e.preventDefault();
+        var resident = {
+            Name: $('input[name=name]').val(),
+            age: $('input[name=age]').val(),
+            RoomNum: $('input[name=room]').val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/api/createResident",
+            data: resident,
+            success: function( msg ) {
+                console.log('server response is', msg.status);
+                window.location.href = '/Residents';
+            },
+        });
+    })
+
+  $(".table-row").click(function() {
+        var ID = $(this)[0].children[0].innerHTML;
+        window.location.href = '/ResidentProfile/' + ID;
+    });
+</script>

@@ -1,0 +1,25 @@
+{
+    "configurations": [
+    {
+        "name": "Attach",
+        "port": 3000,
+        "request": "attach",
+        "skipFiles": [
+            "<node_internals>/**"
+        ],
+        "type": "node"
+    },
+    {
+        "command": "npm start",
+        "name": "Run npm start",
+        "request": "launch",
+        "type": "node-terminal"
+    },
+        {
+            "type": "pwa-chrome",
+            "name": "http://localhost:3000/",
+            "request": "launch",
+            "url": "http://localhost:3000/"
+        }
+    ]
+}

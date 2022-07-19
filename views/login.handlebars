@@ -1,0 +1,67 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <form id="loginForm" class="form-horizontal pt-5">
+                <fieldset>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="nurseCodeInput">Nurse Code</label>
+                        <div class="col-md-4">
+                            <input id="nurseCodeInput" name="nurseCode" type="text" placeholder="12345" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="passwordInput">Password</label>
+                        <div class="col-md-4">
+                            <input id="passwordInput" name="password" type="text" placeholder="password1234" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group pt-4">
+                        <label class="col-md-4 control-label" for="signInButton"></label>
+                        <div class="col-md-4">
+                            <button id="loginButton" name="loginButton" class="btn btn-primary">Login</button>
+                            <button id="registerButton" name="registerButton" class="btn btn-secondary">Register</button>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#loginButton').click(function(e){
+        e.preventDefault();
+        
+        var user = {
+            nurseCode: $('input[name=nurseCode]').val(),
+            password: $('input[name=password]').val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/api/auth/signin",
+            data: user,
+            success: function(data, status, settings) {
+                 //TODO Add message user found
+                console.log("User Found");
+                window.location.href = '/residents';
+            },
+            error: function(){
+                //TODO Add message user not found
+                console.log("User Not Found");
+            }
+        });
+    })
+
+    $('#registerButton').click(function(e){
+        e.preventDefault();
+        window.location.href = '/register';
+    })
+</script>
+    
