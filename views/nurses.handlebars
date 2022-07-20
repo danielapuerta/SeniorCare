@@ -6,6 +6,7 @@
       <th scope="col">Last Name</th>
       <th scope="col">Nurse Code</th>
       <th scope="col">Role</th>
+      <th scope="col">Admin</th>
       <th scope="col">Delete</th>
 
     </tr>
@@ -19,32 +20,21 @@
         <td>{{dataValues.nurseCode}}</td>
         <td>{{dataValues.role}}</td>
         <td>
-            {{#if isAdmin}}
-            <button id="makeAdmin" type="button" class="btn btn-success btn-sm">Admin</button>
-            {{/if}}
-            {{#if notAdmin}}
-            <button id="makeAdmin" type="button" class="btn btn-success btn-sm">Basic User</button>
-            {{/if}}
-        <button id="deleteUser" type="button" class="btn btn-danger btn-sm">Delete User</button></td>
+          {{#if dataValues.isAdmin}}
+          <input id="isAdmin_buttonOn" type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" data-size="small"/>
+         {{/if}}
+        {{#if dataValues.isNotAdmin}}
+          <input id="notAdmin_buttonOff" type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" data-size="small"/>
+         {{/if}}
+        </td>
+        <td><span class="bi bi-trash fa-lg"></span></td>
       </tr>
     {{/each}}
   </tbody>
 </table>
 
+
 <script>
-  $('#makeAdmin').click(function(e){
-        e.preventDefault();
-        
-
-        $.ajax({
-            type: "POST",
-            url: "/api/createResident",
-            data: resident,
-            success: function( msg ) {
-                console.log('server response is', msg.status);
-                window.location.href = '/Residents';
-            },
-        });
-    })
-
+   $('#isAdmin_buttonOn').bootstrapToggle('on')
+   $('#notAdmin_buttonOff').bootstrapToggle('off')
 </script>
