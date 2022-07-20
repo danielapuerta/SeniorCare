@@ -1,7 +1,9 @@
 <title>SeniorCare</title>
 <nav class="navbar navbar-light" style="background-color: #55F;">
     <a class="navbar-brand" href="#">SeniorCare</a>
-    <button id="nurseList"  class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    {{#if isAdmin}}
+    <button id="nurseList"  class="navbar-toggler nurseList" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span> 
     </button>
+    {{/if}}
 </nav>
