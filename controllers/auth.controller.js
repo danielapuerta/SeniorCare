@@ -105,6 +105,20 @@ exports.signup = (req, res) => {
         res.status(500).send({ message: err.message });
     });
   };
-//   exports.makeAdmin = (req, res) => {
-//     var idAdmin = 
-//   };
+
+  //make a user an Admin
+     exports.makeAdmin = (req, res) => {
+        var idAdmin = req.body.id;
+        db.User.update(
+            {role: "admin"},
+            {where: {id: idAdmin}}
+        ).then((userObj) => {
+            if(userObj != undefined)
+            {
+                res.status(200);
+                res.send({
+                    userObj
+                });
+            }
+        })
+  };
