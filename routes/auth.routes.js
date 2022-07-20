@@ -17,7 +17,13 @@ module.exports = function(app) {
   );
   app.post("/api/auth/signin", controller.signin);
 
-  //make a user an Admin
-  app.post("/api/makeAdmin", controller.makeAdmin);
+  //make a basic-user an admin (only admin can do this task)
+    app.post("/api/makeAdmin", controller.makeAdmin);
+
+  //make an admin a basic-user (only admin can do this task)
+    app.post("/api/makeBasicUser", controller.makeBasicUser);
+
+  //delete user (only admin can do this task)
+    app.post("/api/deleteUser", controller.deleteUser);
 
 };

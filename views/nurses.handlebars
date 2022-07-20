@@ -24,7 +24,7 @@
           <input class="test_Admin" type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" data-size="small"/>
          {{/if}}
         {{#if dataValues.isNotAdmin}}
-          <input class="test_notAdmin" type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" data-size="small"/>
+          <input class="test_notAdmin" type="checkbox"  data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" data-size="small"/>
          {{/if}}
         </td>
         <td><button type="button" class="btn btn-danger trash_btn"><span class="bi bi-trash"></span></button></td>
@@ -38,6 +38,21 @@
   $(".test_Admin").on("change",function(e){
     e.preventDefault();
     console.log('isAdmin');
+      var hidden_column = e.target.parentElement.parentElement.parentElement.getElementsByClassName('hidden');
+      var ID = hidden_column[0].getInnerHTML();
+      var user = {
+        id: ID,
+      }
+
+     $.ajax({
+        type: "POST",
+        url: "/api/makeBasicUser",
+        data: user,
+        success: function( msg ) {
+        console.log('server response is', msg.status);
+        window.location.href = '/Nurses';
+      },
+    });
   })
 
   $(".test_notAdmin").on("change",function(e){
@@ -50,10 +65,10 @@
       }
 
      $.ajax({
-      type: "POST",
-      url: "/api/makeAdmin",
-      data: user,
-      success: function( msg ) {
+        type: "POST",
+        url: "/api/makeAdmin",
+        data: user,
+        success: function( msg ) {
         console.log('server response is', msg.status);
         window.location.href = '/Nurses';
       },
@@ -63,5 +78,21 @@
   $(".trash_btn").on("click",function(e){
     e.preventDefault();
     console.log('bin button');
+      var hidden_column = e.target.parentElement.parentElement.parentElement.getElementsByClassName('hidden');
+      var ID = hidden_column[0].getInnerHTML();
+      var user = {
+        id: ID,
+      }
+
+     $.ajax({
+        type: "POST",
+        url: "/api/deleteUser",
+        data: user,
+        success: function( msg ) {
+        console.log('server response is', msg.status);
+        window.location.href = '/Nurses';
+      },
+    });
+
   })
 </script>
