@@ -21,20 +21,44 @@
         <td>{{dataValues.role}}</td>
         <td>
           {{#if dataValues.isAdmin}}
-          <input id="isAdmin_buttonOn" type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" data-size="small"/>
+          <input class="test_Admin" type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" data-size="small"/>
          {{/if}}
         {{#if dataValues.isNotAdmin}}
-          <input id="notAdmin_buttonOff" type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" data-size="small"/>
+          <input class="test_notAdmin" type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" data-size="small"/>
          {{/if}}
         </td>
-        <td><span class="bi bi-trash fa-lg"></span></td>
+        <td><button type="button" class="btn btn-danger trash_btn"><span class="bi bi-trash"></span></button></td>
       </tr>
     {{/each}}
   </tbody>
 </table>
 
-
 <script>
-   $('#isAdmin_buttonOn').bootstrapToggle('on')
-   $('#notAdmin_buttonOff').bootstrapToggle('off')
+
+  $(".test_Admin").on("change",function(e){
+    e.preventDefault();
+    console.log('isAdmin');
+
+    $.ajax({
+      type: "POST",
+      url: "/api/makeAdmin",
+      data: User,
+      success: function( msg ) {
+        console.log('server response is', msg.status);
+        window.location.href = '/Nurses';
+      },
+    });
+
+
+  })
+
+  $(".test_notAdmin").on("change",function(e){
+    e.preventDefault();
+    console.log('notAdmin');
+  })
+
+  $(".trash_btn").on("click",function(e){
+    e.preventDefault();
+    console.log('bin button');
+  })
 </script>
