@@ -38,23 +38,26 @@
   $(".test_Admin").on("change",function(e){
     e.preventDefault();
     console.log('isAdmin');
+  })
 
-    $.ajax({
+  $(".test_notAdmin").on("change",function(e){
+    e.preventDefault();
+      console.log('notAdmin');
+      var hidden_column = e.target.parentElement.parentElement.parentElement.getElementsByClassName('hidden');
+      var ID = hidden_column[0].getInnerHTML();
+      var user = {
+        id: ID,
+      }
+
+     $.ajax({
       type: "POST",
       url: "/api/makeAdmin",
-      data: User,
+      data: user,
       success: function( msg ) {
         console.log('server response is', msg.status);
         window.location.href = '/Nurses';
       },
     });
-
-
-  })
-
-  $(".test_notAdmin").on("change",function(e){
-    e.preventDefault();
-    console.log('notAdmin');
   })
 
   $(".trash_btn").on("click",function(e){
