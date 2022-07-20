@@ -73,14 +73,25 @@ module.exports = function(app) {
   //view nurse list
     app.get('/Nurses',[authJwt.verifyToken, function(req, res) {
       let isAdmin = req.cookies['role'] == 'admin';
-      let notAdmin = req.cookies['role'] != 'admin';
+      let notAdmin = req.cookies['role'] != 'basic user';
       db.User.findAll({order: [['createdAt', 'DESC']]})
       .then(nurseObjs => {
+        for(var i = 0; i < nurseObjs.length; i++){
+          var nurse = nurseObjs[i];
+          var roleNurse = nurse.dataValues.role;
+          //adding a new column in datavalues object to check if it's admin
+          var isNurseAdmin = roleNurse == "admin";
+          nurse.dataValues.isAdmin = isNurseAdmin;
+          //adding a new column in datavalues object to check if it's basic user
+          var isNotNurseAdmin = roleNurse == "nurse";
+          nurse.dataValues.isNotAdmin = isNotNurseAdmin;
+        };
         res.render('nurses', {
           nurseObjs: nurseObjs,
           isAdmin: isAdmin,
           notAdmin: notAdmin
         });
+        
       })
     }]);
 
