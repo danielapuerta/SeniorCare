@@ -18,6 +18,6 @@ module.exports = function(app) {
   app.post("/api/auth/signin", controller.signin);
 
   //make a user an Admin
- // app.post("/api/makeAdmin", controller.makeAdmin);
+  app.post("/api/makeAdmin", controller.makeAdmin);
 
 };
