@@ -72,6 +72,43 @@
   </div>
 </div>
 
+<!-- Modal for Recent Falls -->
+<div class="modal fade" id="addFallsModal" tabindex="-1" role="dialog" aria-labelledby="addBloodSugarLevels" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addFallsLabel">Add Recent Falls</h5>
+        <button type="button" id="close_button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row justify-content-center">
+              <div >
+                <form id="residentForm" class="form-horizontal">
+                        <fieldset>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="recentFallsInput">Recent Falls</label>
+                                <div class="col-md-4">
+                                    <input id="recentFallsInput" name="recentFalls" type="datetime-local" placeholder="2022-07-21T19:32 " class="form-control input-md">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="addRecentFalls_Button" type="button" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {{!-- Container for the records of: BloodPressureSugar, Temperature and Falls--}}
 <div class="container">
 	<div class="row">
@@ -106,15 +143,14 @@
                     <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addBodyTemperatureModal"><span class="fa fa-plus-circle"></span> </button>
                 </div>
                 <div class="col-md-4 emphasis"               
-                    <p><strong>Last Fall</strong></p>
+                    <p><strong>Recent Falls </strong></p>
                      <ul class="list-group">
-                        <li class="list-group-item">12-06-2022 01:30</li>
-                        <li class="list-group-item">12-06-2022 01:30</li>
-                        <li class="list-group-item">12-06-2022 01:30</li>
-                        <li class="list-group-item">12-06-2022 01:30</li>
-                        <li class="list-group-item">12-06-2022 01:30</li>
+                        {{#each fallObjs}}
+                            <li class="list-group-item">{{this.dataValues.DateTine_Fall}}</li>  
+                        {{/each}}
+
                     </ul>
-                    <button class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> </button>
+                    <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addFallsModal"><span class="fa fa-plus-circle"></span> </button>
                 </div>
             </div>
     	 </div>                 
@@ -125,6 +161,7 @@
 
 
 <script>
+    //blood sugar 
     $('#addBloodSugarLevels_Button').click(function(e){
         e.preventDefault();
         var bloodSugarLevels = {
@@ -142,9 +179,9 @@
         },
         });
     })
+    //body temperature
     $('#addBodyTemperature_Button').click(function(e){
         e.preventDefault();
-        console.log("test");
         var bodyTemperature = {
             BodyTemperature : $('input[name=bodyTemperature]').val(),
             PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
@@ -159,12 +196,24 @@
             window.location.href = '/ResidentProfile/' + bodyTemperature.PatientId;
         },
         });
+    });
+    //recent falls
+    $('#addRecentFalls_Button').click(function(e){
+        e.preventDefault();
+        console.log("test");
+        var recentFalls = {
+            Falls : $('input[name=recentFalls]').val(),
+            PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+        }
+        $.ajax({
+        type: "POST",
+        url: "/api/addRecentFalls",
+        data: recentFalls,
+        success: function( msg ) {
+            var id = msg.PatientId;
+            console.log('server response is', msg.status);
+            window.location.href = '/ResidentProfile/' + recentFalls.PatientId;
+        },
+        });
     })
-
-
-
-
-
-
-
 </script>
