@@ -1,3 +1,41 @@
+<!-- Modal for Blood Sugar Levels -->
+<div class="modal fade" id="addBloodSugarLevelsModal" tabindex="-1" role="dialog" aria-labelledby="addBloodSugarLevels" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addBloodSugarLevelsLabel">Add Blood Sugar Levels</h5>
+        <button type="button" id="close_button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row justify-content-center">
+              <div >
+                <form id="residentForm" class="form-horizontal">
+                        <fieldset>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="bloodSugarLevelsInput">Blood Sugar Levels</label>
+                                <div class="col-md-4">
+                                    <input id="bloodSugarLevelsInput" name="Blood Sugar Levels" type="text" placeholder="140 mg/dL" class="form-control input-md">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="addBloodSugarLevels_Button" type="button" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Table --}}
 <div class="container">
 	<div class="row">
 		<div>
@@ -13,13 +51,13 @@
                 <div class="col-md-4 emphasis">                    
                     <p><strong>Blood Sugar Level</strong></p>
                     <ul class="list-group">
-                        <li class="list-group-item">60/80</li>
-                        <li class="list-group-item">69/78</li>
-                        <li class="list-group-item">73/89</li>
-                        <li class="list-group-item">67/90</li>
-                        <li class="list-group-item">2</li>
+                        
+                        {{#each bloodSugarLevelObjs}}
+                            <li class="list-group-item">{{this}}</li>  
+                        {{/each}}
+                        
                     </ul>
-                    <button class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> </button>
+                    <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addBloodSugarLevelsModal"><span class="fa fa-plus-circle"></span> </button>
                 </div>
                 <div class="col-md-4 emphasis">                  
                     <p><strong>Blood Pressure</strong></p>
@@ -48,3 +86,51 @@
 		</div>
 	</div>
 </div>
+
+
+
+<script>
+    $('#addBloodSugarLevels_Button').click(function(e){
+        e.preventDefault();
+        var bloodSugarLevels = {
+            Levels : $('input[name=bloodSugarLevels]').val(),
+        }
+
+        $.ajax({
+        type: "POST",
+        url: "/api/addBloodSugarLevels",
+        data: sugarLevels,
+        success: function( msg ) {
+            console.log('server response is', msg.status);
+            window.location.href = '/ResidentProfile/';
+        },
+        });
+    })
+</script>
+
+<script>
+
+  $('#addResidentButton').click(function(e){
+        e.preventDefault();
+        var resident = {
+            Name: $('input[name=name]').val(),
+            age: $('input[name=age]').val(),
+            RoomNum: $('input[name=room]').val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/api/createResident",
+            data: resident,
+            success: function( msg ) {
+                console.log('server response is', msg.status);
+                window.location.href = '/Residents';
+            },
+        });
+    })
+
+  $(".table-row").click(function() {
+        var ID = $(this)[0].children[0].innerHTML;
+        window.location.href = '/ResidentProfile/' + ID;
+    });
+</script>
