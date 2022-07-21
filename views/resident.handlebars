@@ -18,7 +18,7 @@
                             <div class="form-group">
                                 <label class="col-md-4 control-label" for="bloodSugarLevelsInput">Blood Sugar Levels</label>
                                 <div class="col-md-4">
-                                    <input id="bloodSugarLevelsInput" name="Blood Sugar Levels" type="text" placeholder="140 mg/dL" class="form-control input-md">
+                                    <input id="bloodSugarLevelsInput" name="bloodSugarLevels" type="text" placeholder="140 mg/dL" class="form-control input-md">
                                 </div>
                             </div>
                         </fieldset>
@@ -53,7 +53,7 @@
                     <ul class="list-group">
                         
                         {{#each bloodSugarLevelObjs}}
-                            <li class="list-group-item">{{this}}</li>  
+                            <li class="list-group-item">{{this.dataValues.Levels}}</li>  
                         {{/each}}
                         
                     </ul>
@@ -92,45 +92,22 @@
 <script>
     $('#addBloodSugarLevels_Button').click(function(e){
         e.preventDefault();
+
         var bloodSugarLevels = {
             Levels : $('input[name=bloodSugarLevels]').val(),
+            PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
         }
+
 
         $.ajax({
         type: "POST",
         url: "/api/addBloodSugarLevels",
-        data: sugarLevels,
+        data: bloodSugarLevels,
         success: function( msg ) {
+            var id = msg.PatientId;
             console.log('server response is', msg.status);
-            window.location.href = '/ResidentProfile/';
+            window.location.href = '/ResidentProfile/' + bloodSugarLevels.PatientId;
         },
         });
     })
-</script>
-
-<script>
-
-  $('#addResidentButton').click(function(e){
-        e.preventDefault();
-        var resident = {
-            Name: $('input[name=name]').val(),
-            age: $('input[name=age]').val(),
-            RoomNum: $('input[name=room]').val()
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/api/createResident",
-            data: resident,
-            success: function( msg ) {
-                console.log('server response is', msg.status);
-                window.location.href = '/Residents';
-            },
-        });
-    })
-
-  $(".table-row").click(function() {
-        var ID = $(this)[0].children[0].innerHTML;
-        window.location.href = '/ResidentProfile/' + ID;
-    });
 </script>

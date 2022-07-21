@@ -61,11 +61,17 @@ module.exports = function(app) {
 
   // view resident profile
   app.get('/ResidentProfile/:id', [authJwt.verifyToken, function(req, res) {
+
     db.Residents.findAll({where: { id:req.params.id},order: [['createdAt', 'DESC']], limit: 1})
     .then(residentObj => {
       var parsedResidentObject = residentObj[0].dataValues;
-      res.render('resident', {
-        residentObj: parsedResidentObject
+      db.BloodSugarLevels.findAll({order: [['createdAt', 'DESC']], limit: 5})
+      .then((bloodSugarLevelObjs) => {
+        console.log(bloodSugarLevelObjs);
+        res.render('resident', {
+          residentObj: parsedResidentObject,
+          bloodSugarLevelObjs: bloodSugarLevelObjs
+        });
       });
     })
   }]);
@@ -94,6 +100,22 @@ module.exports = function(app) {
         
       })
     }]);
+
+
+ //add blood sugar levels
+  app.post('/api/addBloodSugarLevels', [ authJwt.verifyToken,function(req, res) {
+    const patient = {
+      "Levels": req.body.Levels,
+      "PatientId": req.body.PatientId
+    };
+    db.BloodSugarLevels.create({PatientId: patient.PatientId, Levels: patient.Levels})
+    .then(bloodSugarLevelsObj => {
+      res.status(200);
+      res.send(bloodSugarLevelsObj.dataValues);
+    });
+  }]);
+
+
 
 
 };
