@@ -146,7 +146,7 @@
                     <p><strong>Recent Falls </strong></p>
                      <ul class="list-group">
                         {{#each fallObjs}}
-                            <li class="list-group-item">{{this.dataValues.DateTine_Fall}}</li>  
+                            <li class="list-group-item">{{this.dataValues.DateTime_Fall}}</li>  
                         {{/each}}
 
                     </ul>
@@ -202,7 +202,7 @@
         e.preventDefault();
         console.log("test");
         var recentFalls = {
-            Falls : $('input[name=recentFalls]').val(),
+            DateTime_Fall : $('input[name=recentFalls]').val(),
             PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
         }
         $.ajax({
