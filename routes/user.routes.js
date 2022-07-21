@@ -61,19 +61,24 @@ module.exports = function(app) {
 
   // view resident profile
   app.get('/ResidentProfile/:id', [authJwt.verifyToken, function(req, res) {
-
-    db.Residents.findAll({where: { id:req.params.id},order: [['createdAt', 'DESC']], limit: 1})
-    .then(residentObj => {
-      var parsedResidentObject = residentObj[0].dataValues;
+    //view profile
+    db.Residents.findAll({where: { id:req.params.id},order: [['createdAt', 'DESC']], limit: 1}).then(residentObj => {
+        var parsedResidentObject = residentObj[0].dataValues;
+      //view blood sugar level records
       db.BloodSugarLevels.findAll({order: [['createdAt', 'DESC']], limit: 5})
       .then((bloodSugarLevelObjs) => {
-        console.log(bloodSugarLevelObjs);
-        res.render('resident', {
-          residentObj: parsedResidentObject,
-          bloodSugarLevelObjs: bloodSugarLevelObjs
+        //view body temperature
+        db.BodyTemperature.findAll({order: [['createdAt', 'DESC']], limit: 5})
+        .then((bodyTemperatureObjs) => {
+          res.render('resident', {
+            residentObj: parsedResidentObject,
+            bloodSugarLevelObjs: bloodSugarLevelObjs,
+            bodyTemperatureObjs: bodyTemperatureObjs
+          });
         });
       });
     })
+
   }]);
 
   //view nurse list
@@ -111,7 +116,20 @@ module.exports = function(app) {
     db.BloodSugarLevels.create({PatientId: patient.PatientId, Levels: patient.Levels})
     .then(bloodSugarLevelsObj => {
       res.status(200);
-      res.send(bloodSugarLevelsObj.dataValues);
+      res.send(bloodSugarLevelsObj);
+    });
+  }]);
+
+  //add body temperature
+   app.post('/api/addBodyTemperature', [ authJwt.verifyToken,function(req, res) {
+    const patient = {
+      "BodyTemperature": req.body.BodyTemperature,
+      "PatientId": req.body.PatientId
+    };
+    db.BodyTemperature.create({PatientId: patient.PatientId, BodyTemperature: patient.BodyTemperature})
+    .then(bodyTemperatureObjs => {
+      res.status(200);
+      res.send(bodyTemperatureObjs);
     });
   }]);
 
