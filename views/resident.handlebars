@@ -35,7 +35,44 @@
   </div>
 </div>
 
-{{!-- Table --}}
+<!-- Modal for Body Temperature -->
+<div class="modal fade" id="addBodyTemperatureModal" tabindex="-1" role="dialog" aria-labelledby="addBloodSugarLevels" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addBodyTemperatureLabel">Add Body Temperature</h5>
+        <button type="button" id="close_button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row justify-content-center">
+              <div >
+                <form id="residentForm" class="form-horizontal">
+                        <fieldset>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="bodyTemperatureInput">Body Temperature</label>
+                                <div class="col-md-4">
+                                    <input id="bodyTemperatureInput" name="bodyTemperature" type="text" placeholder="36°C" class="form-control input-md">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="addBodyTemperature_Button" type="button" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Container for the records of: BloodPressureSugar, Temperature and Falls--}}
 <div class="container">
 	<div class="row">
 		<div>
@@ -49,7 +86,7 @@
             </div>            
             <div class="row justify-content-center">
                 <div class="col-md-4 emphasis">                    
-                    <p><strong>Blood Sugar Level</strong></p>
+                    <p><strong>Blood Sugar Level - mg/dL</strong></p>
                     <ul class="list-group">
                         
                         {{#each bloodSugarLevelObjs}}
@@ -60,15 +97,13 @@
                     <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addBloodSugarLevelsModal"><span class="fa fa-plus-circle"></span> </button>
                 </div>
                 <div class="col-md-4 emphasis">                  
-                    <p><strong>Blood Pressure</strong></p>
+                    <p><strong>Body Temperature - °C</strong></p>
                     <ul class="list-group">
-                        <li class="list-group-item">60/80</li>
-                        <li class="list-group-item">69/78</li>
-                        <li class="list-group-item">73/89</li>
-                        <li class="list-group-item">67/90</li>
-                        <li class="list-group-item">2</li>
+                       {{#each bodyTemperatureObjs}}
+                            <li class="list-group-item">{{this.dataValues.BodyTemperature}}</li>  
+                        {{/each}}
                     </ul>
-                    <button class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> </button>
+                    <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addBodyTemperatureModal"><span class="fa fa-plus-circle"></span> </button>
                 </div>
                 <div class="col-md-4 emphasis"               
                     <p><strong>Last Fall</strong></p>
@@ -92,13 +127,10 @@
 <script>
     $('#addBloodSugarLevels_Button').click(function(e){
         e.preventDefault();
-
         var bloodSugarLevels = {
             Levels : $('input[name=bloodSugarLevels]').val(),
             PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
         }
-
-
         $.ajax({
         type: "POST",
         url: "/api/addBloodSugarLevels",
@@ -110,4 +142,29 @@
         },
         });
     })
+    $('#addBodyTemperature_Button').click(function(e){
+        e.preventDefault();
+        console.log("test");
+        var bodyTemperature = {
+            BodyTemperature : $('input[name=bodyTemperature]').val(),
+            PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+        }
+        $.ajax({
+        type: "POST",
+        url: "/api/addBodyTemperature",
+        data: bodyTemperature,
+        success: function( msg ) {
+            var id = msg.PatientId;
+            console.log('server response is', msg.status);
+            window.location.href = '/ResidentProfile/' + bodyTemperature.PatientId;
+        },
+        });
+    })
+
+
+
+
+
+
+
 </script>
