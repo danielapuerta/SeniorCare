@@ -62,24 +62,30 @@ module.exports = function(app) {
   // view resident profile
   app.get('/ResidentProfile/:id', [authJwt.verifyToken, function(req, res) {
     //view profile
-    db.Residents.findAll({where: { id:req.params.id},order: [['createdAt', 'DESC']], limit: 1}).then(residentObj => {
+    db.Residents.findAll({where: { id:req.params.id},order: [['createdAt', 'DESC']], limit: 1})
+    .then(residentObj => {
         var parsedResidentObject = residentObj[0].dataValues;
       //view blood sugar level records
       db.BloodSugarLevels.findAll({order: [['createdAt', 'DESC']], limit: 5})
       .then((bloodSugarLevelObjs) => {
-        //view body temperature
+        //view body temperature records
         db.BodyTemperature.findAll({order: [['createdAt', 'DESC']], limit: 5})
         .then((bodyTemperatureObjs) => {
-          res.render('resident', {
-            residentObj: parsedResidentObject,
-            bloodSugarLevelObjs: bloodSugarLevelObjs,
-            bodyTemperatureObjs: bodyTemperatureObjs
+          //view recent falls records
+          db.Falls.findAll({order: [['createdAt', 'DESC']], limit: 5})
+          .then((fallObjs) => {
+            res.render('resident', {
+              residentObj: parsedResidentObject,
+              bloodSugarLevelObjs: bloodSugarLevelObjs,
+              bodyTemperatureObjs: bodyTemperatureObjs,
+              fallObjs: fallObjs
+            });
           });
         });
       });
-    })
-
+    });
   }]);
+
 
   //view nurse list
     app.get('/Nurses',[authJwt.verifyToken, function(req, res) {
@@ -133,7 +139,17 @@ module.exports = function(app) {
     });
   }]);
 
-
-
+  //add recent falls
+  app.post('/api/addRecentFalls', [ authJwt.verifyToken,function(req, res) {
+    const patient = {
+      "DateTime_Fall": req.body.DateTime_Fall,
+      "PatientId": req.body.PatientId
+    };
+    db.Falls.create({PatientId: patient.PatientId, DateTime_Fall: patient.DateTime_Fall})
+    .then(fallObjs => {
+      res.status(200);
+      res.send(fallObjs);
+    });
+  }]);
 
 };
