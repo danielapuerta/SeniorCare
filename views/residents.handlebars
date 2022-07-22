@@ -1,4 +1,4 @@
-<!-- Modal -->
+<!-- Modal for add new resident-->
 <div class="modal fade" id="AddNewResidentModal" tabindex="-1" role="dialog" aria-labelledby="AddNewResidentModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -16,9 +16,24 @@
                         <fieldset>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="nameInput">Name</label>
+                                <label class="col-md-4 control-label" for="nameInput">Full Name</label>
                                 <div class="col-md-4">
                                     <input id="nameInput" name="name" type="text" placeholder="Joe Bloggs" class="form-control input-md">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="genderInput">Gender</label>
+                                <div class="col-md-4">
+                                    <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="genderInput" name="gender" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Dropdown button
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                      <a class="dropdown-item" href="#">Male</a>
+                                      <a class="dropdown-item" href="#">Female</a>
+                                    </div>
+                                  </div>
                                 </div>
                             </div>
 
@@ -54,9 +69,12 @@
   <thead>
     <tr>
       <th scope="col" data-class='hidden' class='hidden'>ID</th>
-      <th scope="col">Name</th>
+      <th scope="col">Full Name</th>
+      <th scope="col">Gender</th>
       <th scope="col">Age</th>
       <th scope="col">Room Number</th>
+      <th scope="col">Priority</th>
+
     </tr>
   </thead>
   <tbody>
@@ -64,8 +82,10 @@
     <tr data={{dataValues}}  class="table-row">
       <td class='hidden'>{{dataValues.id}}</td>
       <td>{{dataValues.Name}}</td>
+      <td>{{dataValues.Gender}}</td>
       <td>{{dataValues.age}}</td>
       <td>{{dataValues.RoomNum}}</td>
+      <td>{{dataValues.Priority}}</td>
     </tr>
     {{/each}}
   </tbody>
@@ -80,6 +100,7 @@
         e.preventDefault();
         var resident = {
             Name: $('input[name=name]').val(),
+            Gender: $('input[gender=gender]').val(),
             age: $('input[name=age]').val(),
             RoomNum: $('input[name=room]').val()
         }
@@ -99,4 +120,6 @@
         var ID = $(this)[0].children[0].innerHTML;
         window.location.href = '/ResidentProfile/' + ID;
     });
+
+
 </script>
