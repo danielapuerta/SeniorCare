@@ -1,7 +1,39 @@
 const { authJwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
 const db = require('../models/index.js');
+
+/* Algorithm to update priority*/
+function updatePriority(){
+  console.log("updatePriority")
+}
+/* Algorithm to create priority based on....*/
+function createPriority_Fall(){
+  console.log("createPriority")
+  let points_daily = 3;
+  let points_weekly = 2;
+  let points_montly = 1;
+
+  let numbers_daily = 0;
+  let numbers_weekly = 0;
+  let numbers_montly = 0;
+
+  let fallLowPriority = "Low Risk";
+  let fallMediumPriority = "Medium Risk";
+  let fallHighPriority = "High Risk";
+
+  if(patient == null){
+    return fallLowPriority;
+  }else if(patient => 1){
+    return fallMediumPriority;
+  }else{
+
+  }
+
+
+}
+
 module.exports = function(app) {
+
   app.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
@@ -119,11 +151,13 @@ module.exports = function(app) {
       "Levels": req.body.Levels,
       "PatientId": req.body.PatientId
     };
+    //create new rows in table
     db.BloodSugarLevels.create({PatientId: patient.PatientId, Levels: patient.Levels})
     .then(bloodSugarLevelsObj => {
-      res.status(200);
-      res.send(bloodSugarLevelsObj);
+        res.status(200);
+        res.send(bloodSugarLevelsObj);
     });
+
   }]);
 
   //add body temperature
@@ -132,6 +166,7 @@ module.exports = function(app) {
       "BodyTemperature": req.body.BodyTemperature,
       "PatientId": req.body.PatientId
     };
+    //create new rows in table
     db.BodyTemperature.create({PatientId: patient.PatientId, BodyTemperature: patient.BodyTemperature})
     .then(bodyTemperatureObjs => {
       res.status(200);
@@ -145,8 +180,10 @@ module.exports = function(app) {
       "DateTime_Fall": req.body.DateTime_Fall,
       "PatientId": req.body.PatientId
     };
+    //create new rows in table
     db.Falls.create({PatientId: patient.PatientId, DateTime_Fall: patient.DateTime_Fall})
     .then(fallObjs => {
+      updatePriority();
       res.status(200);
       res.send(fallObjs);
     });
