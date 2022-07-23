@@ -3,28 +3,54 @@ const controller = require("../controllers/user.controller");
 const db = require('../models/index.js');
 
 /* Algorithm to create priority*/
-function createPriority(){
-  let promise_daily_falls_count = get_daily_record_falls();
-  promise_daily_falls_count.then(value => {
-    console.log(value);
-  })
+function createPriority(id){
+  let promise_daily_falls_count = get_daily_record_falls(id);
+  let promise_weekly_falls_count = get_weekly_record_falls(id);
+
+  promise_daily_falls_count.then(today => {
+    console.log(today);
+  }); 
+  promise_weekly_falls_count.then(week => {
+    console.log(week);
+  });
 
 }
-  function get_daily_record_falls(){
+function get_daily_record_falls(id){
     const moment = require('moment');
     const Op = require('sequelize').Op;
     const promise_count_daily = new Promise((resolve, reject) => {
       db.Falls.count( {
         where : {
-          createdAt : { [Op.gt] : moment().format('YYYY-MM-DD 00:00')},
-          createdAt : { [Op.lte] : moment().format('YYYY-MM-DD 23:59')}
+          PatientId : id,
+          createdAt : { [Op.between] : [moment().format('YYYY-MM-DD 00:00'), moment().format('YYYY-MM-DD 23:59')]}
         },
       }).then(count_daily_falls =>{
         resolve(count_daily_falls);
       })
     })
     return promise_count_daily;
-  }
+}
+
+function get_weekly_record_falls(id){
+  const Op = require('sequelize').Op;
+  const today = new Date();
+  const week = 1000*60*60*24*7; //week in milliseconds
+  const today_minus_seven_days = new Date(today.getTime() - week);
+
+  const promise_count_weekly = new Promise((resolve, reject) => {
+    db.Falls.count( {
+      where : {
+        PatientId : id,
+        createdAt : { [Op.between] : [today_minus_seven_days, today]}
+      },
+    }).then(count_weekly_falls =>{
+      resolve(count_weekly_falls);
+    })
+  })
+  return promise_count_weekly;
+}
+
+
 
 
 module.exports = function(app) {
@@ -177,7 +203,7 @@ module.exports = function(app) {
     //create new rows in table
     db.Falls.create({PatientId: patient.PatientId, DateTime_Fall: patient.DateTime_Fall})
     .then(fallObjs => {
-      createPriority(); //call the method that creates Priority of residents
+      createPriority(patient.PatientId); //call the method that creates Priority of residents
       res.status(200);
       res.send(fallObjs);
     });
