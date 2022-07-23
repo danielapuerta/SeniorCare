@@ -6,12 +6,16 @@ const db = require('../models/index.js');
 function createPriority(id){
   let promise_daily_falls_count = get_daily_record_falls(id);
   let promise_weekly_falls_count = get_weekly_record_falls(id);
+  let promise_monthly_falls_count = get_monthly_record_falls(id);
 
   promise_daily_falls_count.then(today => {
     console.log(today);
   }); 
   promise_weekly_falls_count.then(week => {
     console.log(week);
+  });
+  promise_monthly_falls_count.then(month => {
+    console.log(month);
   });
 
 }
@@ -22,7 +26,7 @@ function get_daily_record_falls(id){
       db.Falls.count( {
         where : {
           PatientId : id,
-          createdAt : { [Op.between] : [moment().format('YYYY-MM-DD 00:00'), moment().format('YYYY-MM-DD 23:59')]}
+          DateTime_Fall : { [Op.between] : [moment().format('YYYY-MM-DD 00:00'), moment().format('YYYY-MM-DD 23:59')]}
         },
       }).then(count_daily_falls =>{
         resolve(count_daily_falls);
@@ -35,13 +39,13 @@ function get_weekly_record_falls(id){
   const Op = require('sequelize').Op;
   const today = new Date();
   const week = 1000*60*60*24*7; //week in milliseconds
-  const today_minus_seven_days = new Date(today.getTime() - week);
+  const today_minus_7_days = new Date(today.getTime() - week);
 
   const promise_count_weekly = new Promise((resolve, reject) => {
     db.Falls.count( {
       where : {
         PatientId : id,
-        createdAt : { [Op.between] : [today_minus_seven_days, today]}
+        DateTime_Fall : { [Op.between] : [today_minus_7_days, today]}
       },
     }).then(count_weekly_falls =>{
       resolve(count_weekly_falls);
@@ -50,6 +54,24 @@ function get_weekly_record_falls(id){
   return promise_count_weekly;
 }
 
+function get_monthly_record_falls(id){
+  const Op = require('sequelize').Op;
+  const today = new Date();
+  const month = 1000*60*60*24*30; //months in milliseconds, 30 days as example
+  const today_minus_30_days = new Date(today.getTime() - month);
+
+  const promise_count_monthly = new Promise((resolve, reject) => {
+    db.Falls.count( {
+      where : {
+        PatientId : id,
+        DateTime_Fall : { [Op.between] : [today_minus_30_days, today]}
+      },
+    }).then(count_monthly_falls =>{
+      resolve(count_monthly_falls);
+    })
+  })
+  return promise_count_monthly;
+}
 
 
 
