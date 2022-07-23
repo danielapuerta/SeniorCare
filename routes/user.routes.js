@@ -3,37 +3,32 @@ const controller = require("../controllers/user.controller");
 const db = require('../models/index.js');
 
 /* Algorithm to update priority*/
-function updatePriority(){
+function createPriority(){
   console.log("updatePriority")
+  let promise_daily_falls_count = get_daily_record_falls();
+  promise_daily_falls_count.then(value => {
+    console.log(value);
+  })
+
 }
-/* Algorithm to create priority based on....*/
-function createPriority_Fall(){
-  console.log("createPriority")
-  let points_daily = 3;
-  let points_weekly = 2;
-  let points_montly = 1;
-
-  let numbers_daily = 0;
-  let numbers_weekly = 0;
-  let numbers_montly = 0;
-
-  let fallLowPriority = "Low Risk";
-  let fallMediumPriority = "Medium Risk";
-  let fallHighPriority = "High Risk";
-
-  if(patient == null){
-    return fallLowPriority;
-  }else if(patient => 1){
-    return fallMediumPriority;
-  }else{
-
+  function get_daily_record_falls(){
+    const moment = require('moment');
+    const Op = require('sequelize').Op;
+    const promise_count_daily = new Promise((resolve, reject) => {
+      db.Falls.count( {
+        where : {
+          createdAt : { [Op.gt] : moment().format('YYYY-MM-DD 00:00')},
+          createdAt : { [Op.lte] : moment().format('YYYY-MM-DD 23:59')}
+        },
+      }).then(count_daily_falls =>{
+        resolve(count_daily_falls);
+      })
+    })
+    return promise_count_daily;
   }
 
 
-}
-
 module.exports = function(app) {
-
   app.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
@@ -183,7 +178,7 @@ module.exports = function(app) {
     //create new rows in table
     db.Falls.create({PatientId: patient.PatientId, DateTime_Fall: patient.DateTime_Fall})
     .then(fallObjs => {
-      updatePriority();
+      createPriority();
       res.status(200);
       res.send(fallObjs);
     });
