@@ -2,9 +2,8 @@ const { authJwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
 const db = require('../models/index.js');
 
-/* Algorithm to update priority*/
+/* Algorithm to create priority*/
 function createPriority(){
-  console.log("updatePriority")
   let promise_daily_falls_count = get_daily_record_falls();
   promise_daily_falls_count.then(value => {
     console.log(value);
@@ -93,13 +92,13 @@ module.exports = function(app) {
     .then(residentObj => {
         var parsedResidentObject = residentObj[0].dataValues;
       //view blood sugar level records
-      db.BloodSugarLevels.findAll({order: [['createdAt', 'DESC']], limit: 5})
+      db.BloodSugarLevels.findAll({where: { PatientId:req.params.id},order: [['createdAt', 'DESC']]})
       .then((bloodSugarLevelObjs) => {
         //view body temperature records
-        db.BodyTemperature.findAll({order: [['createdAt', 'DESC']], limit: 5})
+        db.BodyTemperature.findAll({where: { PatientId:req.params.id},order: [['createdAt', 'DESC']]})
         .then((bodyTemperatureObjs) => {
           //view recent falls records
-          db.Falls.findAll({order: [['createdAt', 'DESC']], limit: 5})
+          db.Falls.findAll({where: { PatientId:req.params.id},order: [['createdAt', 'DESC']]})
           .then((fallObjs) => {
             res.render('resident', {
               residentObj: parsedResidentObject,
@@ -178,7 +177,7 @@ module.exports = function(app) {
     //create new rows in table
     db.Falls.create({PatientId: patient.PatientId, DateTime_Fall: patient.DateTime_Fall})
     .then(fallObjs => {
-      createPriority();
+      createPriority(); //call the method that creates Priority of residents
       res.status(200);
       res.send(fallObjs);
     });
