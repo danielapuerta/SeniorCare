@@ -11,10 +11,14 @@ function createPriority(id) {
   let promise_weekly_falls_count = get_weekly_number_falls(id);
   let promise_monthly_falls_count = get_monthly_number_falls(id);
 
-  //create score board points
-  let points_daily = 3;
-  let points_weekly = 2;
-  let points_monthly = 1;
+  //create score board points for Falls
+  let iPointsDaily = 3;
+  let iPointsWeekly = 2;
+  let iPointsMonthly = 1;
+
+  //create score board points for Body Tempe
+  let iPointsHighTemp = 10;
+  let iPointsMediumTemp = 5;
  
 
   //create an array of Promises
@@ -33,20 +37,19 @@ function createPriority(id) {
     let iDailyFalls = aValues[2];
     let iWeeklyFalls = aValues[3];
     let iMonthlyFalls = aValues[4];
-    
+
     let iTotalNumberOfPoints = 0;
-    iTotalNumberOfPoints += (iDailyFalls * points_daily);
-    iTotalNumberOfPoints += (iWeeklyFalls * points_weekly);
-    iTotalNumberOfPoints += (iMonthlyFalls * points_monthly);
+    iTotalNumberOfPoints += (iDailyFalls * iPointsDaily);
+    iTotalNumberOfPoints += (iWeeklyFalls * iPointsWeekly);
+    iTotalNumberOfPoints += (iMonthlyFalls * iPointsMonthly);
 
-    let iMediumTemp = 37;
-    let iHighTemp = 34;
-
-
-
-  
-
-
+    if(iBodyTemperature <=33 || iBodyTemperature >= 38){
+      iTotalNumberOfPoints += iPointsHighTemp; 
+      console.log('High Priority' + iTotalNumberOfPoints);
+    }else if((iBodyTemperature >33 || iBodyTemperature <38) && (iBodyTemperature <35 && iBodyTemperature >36)){
+      iTotalNumberOfPoints += iPointsMediumTemp; 
+      console.log('Medium Priority' + iPointsMediumTemp);
+    }
   });
 
 }
@@ -134,6 +137,12 @@ function get_latest_blood_sugar_levels(id) {
       order: [["createdAt", "DESC"]], 
       limit: 1,
     }).then((aLatestBSL) => {
+      if(aLatestBSL.length == 0){
+        //fix this problem what it should be return 
+        //in order to not have the error or having a empty array of objects
+        //this will be used for the three get functions
+        //the solution is in this file
+      }
       resolve(aLatestBSL[0].dataValues.Levels);
     });
   });
@@ -330,3 +339,4 @@ module.exports = function (app) {
     },
   ]);
 };
+
