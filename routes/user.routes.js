@@ -9,6 +9,7 @@ function createPriority(id) {
   let promise_weekly_falls_count = get_weekly_number_falls(id);
   let promise_monthly_falls_count = get_monthly_number_falls(id);
   let promise_latest_temperature = get_latest_body_temperature(id);
+  let promise_latest_blood_sugar_levels = get_latest_blood_sugar_levels(id);
 
   //create score board points
   let points_daily = 3;
@@ -17,19 +18,19 @@ function createPriority(id) {
 
   //create an array of Promises
   const allPromises = [
+    promise_latest_blood_sugar_levels,
+    promise_latest_temperature,
     promise_daily_falls_count,
     promise_weekly_falls_count,
-    promise_monthly_falls_count,
+    promise_monthly_falls_count
+    
+    
   ];
 
   //PENDING TO DO
   Promise.all(allPromises).then((aValues) => {
+    console.log(aValues);
   });
-  
-  //testing get lastest temperature
-  promise_latest_temperature.then(temp => {
-    console.log(temp);
-  }); 
 
 }
 //function to get daily number of fall per resident
@@ -96,17 +97,30 @@ function get_monthly_number_falls(id) {
 
 //function to get the lastest body temperature per resident
 function get_latest_body_temperature(id) {
-  const Op = require("sequelize").Op;
   const oPromiseLatestTemperature = new Promise((resolve, reject) => {
     db.BodyTemperature.findAll({
       where: {PatientId: id},
       order: [["createdAt", "DESC"]], 
       limit: 1,
-    }).then((oLatestTemperature) => {
-      resolve(oLatestTemperature[0].dataValues.BodyTemperature);
+    }).then((aLatestTemperature) => {
+      resolve(aLatestTemperature[0].dataValues.BodyTemperature);
     });
   });
   return oPromiseLatestTemperature;
+}
+
+//function to get the lastest blood sugar levels per resident
+function get_latest_blood_sugar_levels(id) {
+  const oPromiseLatestBSLevels = new Promise((resolve, reject) => {
+    db.BloodSugarLevels.findAll({
+      where: {PatientId: id},
+      order: [["createdAt", "DESC"]], 
+      limit: 1,
+    }).then((aLatestBSL) => {
+      resolve(aLatestBSL[0].dataValues.Levels);
+    });
+  });
+  return oPromiseLatestBSLevels;
 }
 
 module.exports = function (app) {
