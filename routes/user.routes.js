@@ -1,82 +1,116 @@
 const { authJwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
-const db = require('../models/index.js');
+const db = require("../models/index.js");
 
 /* Algorithm to create priority*/
-function createPriority(id){
-  let promise_daily_falls_count = get_daily_record_falls(id);
-  let promise_weekly_falls_count = get_weekly_record_falls(id);
-  let promise_monthly_falls_count = get_monthly_record_falls(id);
+function createPriority(id) {
+  //Promises te get the number of falls per resident
+  let promise_daily_falls_count = get_daily_number_falls(id);
+  let promise_weekly_falls_count = get_weekly_number_falls(id);
+  let promise_monthly_falls_count = get_monthly_number_falls(id);
+  let promise_latest_temperature = get_latest_body_temperature(id);
 
-  promise_daily_falls_count.then(today => {
-    console.log(today);
+  //create score board points
+  let points_daily = 3;
+  let points_weekly = 2;
+  let points_monthly = 1;
+
+  //create an array of Promises
+  const allPromises = [
+    promise_daily_falls_count,
+    promise_weekly_falls_count,
+    promise_monthly_falls_count,
+  ];
+
+  //PENDING TO DO
+  Promise.all(allPromises).then((aValues) => {
+  });
+  
+  //testing get lastest temperature
+  promise_latest_temperature.then(temp => {
+    console.log(temp);
   }); 
-  promise_weekly_falls_count.then(week => {
-    console.log(week);
-  });
-  promise_monthly_falls_count.then(month => {
-    console.log(month);
-  });
 
 }
-function get_daily_record_falls(id){
-    const moment = require('moment');
-    const Op = require('sequelize').Op;
-    const promise_count_daily = new Promise((resolve, reject) => {
-      db.Falls.count( {
-        where : {
-          PatientId : id,
-          DateTime_Fall : { [Op.between] : [moment().format('YYYY-MM-DD 00:00'), moment().format('YYYY-MM-DD 23:59')]}
+//function to get daily number of fall per resident
+function get_daily_number_falls(id) {
+  const moment = require("moment");
+  const Op = require("sequelize").Op;
+  const promise_count_daily = new Promise((resolve, reject) => {
+    db.Falls.count({
+      where: {
+        PatientId: id,
+        DateTime_Fall: {
+          [Op.between]: [
+            moment().format("YYYY-MM-DD 00:00"),
+            moment().format("YYYY-MM-DD 23:59"),
+          ],
         },
-      }).then(count_daily_falls =>{
-        resolve(count_daily_falls);
-      })
-    })
-    return promise_count_daily;
+      },
+    }).then((count_daily_falls) => {
+      resolve(count_daily_falls);
+    });
+  });
+  return promise_count_daily;
 }
 
-function get_weekly_record_falls(id){
-  const Op = require('sequelize').Op;
+//function to get weekly number of fall per resident
+function get_weekly_number_falls(id) {
+  const Op = require("sequelize").Op;
   const today = new Date();
-  const week = 1000*60*60*24*7; //week in milliseconds
+  const week = 1000 * 60 * 60 * 24 * 7; //week in milliseconds
   const today_minus_7_days = new Date(today.getTime() - week);
 
   const promise_count_weekly = new Promise((resolve, reject) => {
-    db.Falls.count( {
-      where : {
-        PatientId : id,
-        DateTime_Fall : { [Op.between] : [today_minus_7_days, today]}
+    db.Falls.count({
+      where: {
+        PatientId: id,
+        DateTime_Fall: { [Op.between]: [today_minus_7_days, today] },
       },
-    }).then(count_weekly_falls =>{
+    }).then((count_weekly_falls) => {
       resolve(count_weekly_falls);
-    })
-  })
+    });
+  });
   return promise_count_weekly;
 }
 
-function get_monthly_record_falls(id){
-  const Op = require('sequelize').Op;
+//function to get monthly number of fall per resident
+function get_monthly_number_falls(id) {
+  const Op = require("sequelize").Op;
   const today = new Date();
-  const month = 1000*60*60*24*30; //months in milliseconds, 30 days as example
+  const month = 1000 * 60 * 60 * 24 * 30; //months in milliseconds, 30 days as example
   const today_minus_30_days = new Date(today.getTime() - month);
 
   const promise_count_monthly = new Promise((resolve, reject) => {
-    db.Falls.count( {
-      where : {
-        PatientId : id,
-        DateTime_Fall : { [Op.between] : [today_minus_30_days, today]}
+    db.Falls.count({
+      where: {
+        PatientId: id,
+        DateTime_Fall: { [Op.between]: [today_minus_30_days, today] },
       },
-    }).then(count_monthly_falls =>{
+    }).then((count_monthly_falls) => {
       resolve(count_monthly_falls);
-    })
-  })
+    });
+  });
   return promise_count_monthly;
 }
 
+//function to get the lastest body temperature per resident
+function get_latest_body_temperature(id) {
+  const Op = require("sequelize").Op;
+  const oPromiseLatestTemperature = new Promise((resolve, reject) => {
+    db.BodyTemperature.findAll({
+      where: {PatientId: id},
+      order: [["createdAt", "DESC"]], 
+      limit: 1,
+    }).then((oLatestTemperature) => {
+      resolve(oLatestTemperature[0].dataValues.BodyTemperature);
+    });
+  });
+  return oPromiseLatestTemperature;
+}
 
-
-module.exports = function(app) {
-  app.use(function(req, res, next) {
+module.exports = function (app) {
+  app.use(function (req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
       "x-access-token, Origin, Content-Type, Accept"
@@ -84,90 +118,109 @@ module.exports = function(app) {
     next();
   });
   app.get("/api/test/all", controller.allAccess);
-  app.get(
-    "/api/test/user",
-    [authJwt.verifyToken, controller.nurseContent]
-  );
-  app.get(
-    "/api/test/admin",
-    [authJwt.verifyToken, authJwt.isAdmin, controller.adminContent],
-  );
+  app.get("/api/test/user", [authJwt.verifyToken, controller.nurseContent]);
+  app.get("/api/test/admin", [
+    authJwt.verifyToken,
+    authJwt.isAdmin,
+    controller.adminContent,
+  ]);
 
-  //login 
-  app.get('/', function(req, res) {
-      res.render('login');
-    });
-  
-  //register 
-  app.get('/goToRegister', function(req, res) {
-    res.writeHead(302, {location: '/register'});
-    });
-  
-  app.get('/register', function(req, res) {
-    res.render('register');
-    });
+  //login
+  app.get("/", function (req, res) {
+    res.render("login");
+  });
+
+  //register
+  app.get("/goToRegister", function (req, res) {
+    res.writeHead(302, { location: "/register" });
+  });
+
+  app.get("/register", function (req, res) {
+    res.render("register");
+  });
 
   //Residents list
-  app.get('/Residents',[authJwt.verifyToken, function(req, res) {
-    let isAdmin = req.cookies['role'] == 'admin';
-    db.Residents.findAll({order: [['createdAt', 'DESC']]})
-    .then(residentObjs => {
-      res.render('residents', {
-        residentObjs: residentObjs,
-        isAdmin: isAdmin
-      });
-    })
-  }]);
+  app.get("/Residents", [
+    authJwt.verifyToken,
+    function (req, res) {
+      let isAdmin = req.cookies["role"] == "admin";
+      db.Residents.findAll({ order: [["createdAt", "DESC"]] }).then(
+        (residentObjs) => {
+          res.render("residents", {
+            residentObjs: residentObjs,
+            isAdmin: isAdmin,
+          });
+        }
+      );
+    },
+  ]);
 
   // Create new Resident
-  app.post('/api/createResident', [ authJwt.verifyToken, authJwt.isAdmin,function(req, res) {
-    const user = {
-      "Name": req.body.Name,
-      "age": req.body.age,
-      "RoomNum": req.body.RoomNum
-    };
-    db.Residents.findOrCreate({where: {Name: user.Name, age: user.age, RoomNum: user.RoomNum}})
-    .then(([residentObj, created]) => {
-      res.status(200);
-      res.send("Resident Created successfully");
-    });
-  }]);
+  app.post("/api/createResident", [
+    authJwt.verifyToken,
+    authJwt.isAdmin,
+    function (req, res) {
+      const user = {
+        Name: req.body.Name,
+        age: req.body.age,
+        RoomNum: req.body.RoomNum,
+      };
+      db.Residents.findOrCreate({
+        where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum },
+      }).then(([residentObj, created]) => {
+        res.status(200);
+        res.send("Resident Created successfully");
+      });
+    },
+  ]);
 
   // view resident profile
-  app.get('/ResidentProfile/:id', [authJwt.verifyToken, function(req, res) {
-    //view profile
-    db.Residents.findAll({where: { id:req.params.id},order: [['createdAt', 'DESC']], limit: 1})
-    .then(residentObj => {
+  app.get("/ResidentProfile/:id", [
+    authJwt.verifyToken,
+    function (req, res) {
+      //view profile
+      db.Residents.findAll({
+        where: { id: req.params.id },
+        order: [["createdAt", "DESC"]],
+        limit: 1,
+      }).then((residentObj) => {
         var parsedResidentObject = residentObj[0].dataValues;
-      //view blood sugar level records
-      db.BloodSugarLevels.findAll({where: { PatientId:req.params.id},order: [['createdAt', 'DESC']]})
-      .then((bloodSugarLevelObjs) => {
-        //view body temperature records
-        db.BodyTemperature.findAll({where: { PatientId:req.params.id},order: [['createdAt', 'DESC']]})
-        .then((bodyTemperatureObjs) => {
-          //view recent falls records
-          db.Falls.findAll({where: { PatientId:req.params.id},order: [['createdAt', 'DESC']]})
-          .then((fallObjs) => {
-            res.render('resident', {
-              residentObj: parsedResidentObject,
-              bloodSugarLevelObjs: bloodSugarLevelObjs,
-              bodyTemperatureObjs: bodyTemperatureObjs,
-              fallObjs: fallObjs
+        //view blood sugar level records
+        db.BloodSugarLevels.findAll({
+          where: { PatientId: req.params.id },
+          order: [["createdAt", "DESC"]],
+        }).then((bloodSugarLevelObjs) => {
+          //view body temperature records
+          db.BodyTemperature.findAll({
+            where: { PatientId: req.params.id },
+            order: [["createdAt", "DESC"]],
+          }).then((bodyTemperatureObjs) => {
+            //view recent falls records
+            db.Falls.findAll({
+              where: { PatientId: req.params.id },
+              order: [["createdAt", "DESC"]],
+            }).then((fallObjs) => {
+              res.render("resident", {
+                residentObj: parsedResidentObject,
+                bloodSugarLevelObjs: bloodSugarLevelObjs,
+                bodyTemperatureObjs: bodyTemperatureObjs,
+                fallObjs: fallObjs,
+              });
             });
           });
         });
       });
-    });
-  }]);
-
+    },
+  ]);
 
   //view nurse list
-    app.get('/Nurses',[authJwt.verifyToken, function(req, res) {
-      let isAdmin = req.cookies['role'] == 'admin';
-      let notAdmin = req.cookies['role'] != 'admin';
-      db.User.findAll({order: [['createdAt', 'DESC']]})
-      .then(nurseObjs => {
-        for(var i = 0; i < nurseObjs.length; i++){
+  app.get("/Nurses", [
+    authJwt.verifyToken,
+    function (req, res) {
+      let isAdmin = req.cookies["role"] == "admin";
+      let notAdmin = req.cookies["role"] != "admin";
+      db.User.findAll({ order: [["createdAt", "DESC"]] }).then((nurseObjs) => {
+        for (var i = 0; i < nurseObjs.length; i++) {
           var nurse = nurseObjs[i];
           var roleNurse = nurse.dataValues.role;
           //adding a new column in datavalues object to check if it's admin
@@ -176,59 +229,73 @@ module.exports = function(app) {
           //adding a new column in datavalues object to check if it's basic user
           var isNotNurseAdmin = roleNurse == "basic-user";
           nurse.dataValues.isNotAdmin = isNotNurseAdmin;
-        };
-        res.render('nurses', {
+        }
+        res.render("nurses", {
           nurseObjs: nurseObjs,
           isAdmin: isAdmin,
-          notAdmin: notAdmin
+          notAdmin: notAdmin,
         });
-        
-      })
-    }]);
+      });
+    },
+  ]);
 
-
- //add blood sugar levels
-  app.post('/api/addBloodSugarLevels', [ authJwt.verifyToken,function(req, res) {
-    const patient = {
-      "Levels": req.body.Levels,
-      "PatientId": req.body.PatientId
-    };
-    //create new rows in table
-    db.BloodSugarLevels.create({PatientId: patient.PatientId, Levels: patient.Levels})
-    .then(bloodSugarLevelsObj => {
+  //add blood sugar levels
+  app.post("/api/addBloodSugarLevels", [
+    authJwt.verifyToken,
+    function (req, res) {
+      const patient = {
+        Levels: req.body.Levels,
+        PatientId: req.body.PatientId,
+      };
+      //create new rows in table
+      db.BloodSugarLevels.create({
+        PatientId: patient.PatientId,
+        Levels: patient.Levels,
+      }).then((bloodSugarLevelsObj) => {
+        createPriority(patient.PatientId); //call the method that creates Priority of residents
         res.status(200);
         res.send(bloodSugarLevelsObj);
-    });
-
-  }]);
+      });
+    },
+  ]);
 
   //add body temperature
-   app.post('/api/addBodyTemperature', [ authJwt.verifyToken,function(req, res) {
-    const patient = {
-      "BodyTemperature": req.body.BodyTemperature,
-      "PatientId": req.body.PatientId
-    };
-    //create new rows in table
-    db.BodyTemperature.create({PatientId: patient.PatientId, BodyTemperature: patient.BodyTemperature})
-    .then(bodyTemperatureObjs => {
-      res.status(200);
-      res.send(bodyTemperatureObjs);
-    });
-  }]);
+  app.post("/api/addBodyTemperature", [
+    authJwt.verifyToken,
+    function (req, res) {
+      const patient = {
+        BodyTemperature: req.body.BodyTemperature,
+        PatientId: req.body.PatientId,
+      };
+      //create new rows in table
+      db.BodyTemperature.create({
+        PatientId: patient.PatientId,
+        BodyTemperature: patient.BodyTemperature,
+      }).then((bodyTemperatureObjs) => {
+        createPriority(patient.PatientId); //call the method that creates Priority of residents
+        res.status(200);
+        res.send(bodyTemperatureObjs);
+      });
+    },
+  ]);
 
   //add recent falls
-  app.post('/api/addRecentFalls', [ authJwt.verifyToken,function(req, res) {
-    const patient = {
-      "DateTime_Fall": req.body.DateTime_Fall,
-      "PatientId": req.body.PatientId
-    };
-    //create new rows in table
-    db.Falls.create({PatientId: patient.PatientId, DateTime_Fall: patient.DateTime_Fall})
-    .then(fallObjs => {
-      createPriority(patient.PatientId); //call the method that creates Priority of residents
-      res.status(200);
-      res.send(fallObjs);
-    });
-  }]);
-
+  app.post("/api/addRecentFalls", [
+    authJwt.verifyToken,
+    function (req, res) {
+      const patient = {
+        DateTime_Fall: req.body.DateTime_Fall,
+        PatientId: req.body.PatientId,
+      };
+      //create new rows in table
+      db.Falls.create({
+        PatientId: patient.PatientId,
+        DateTime_Fall: patient.DateTime_Fall,
+      }).then((fallObjs) => {
+        createPriority(patient.PatientId); //call the method that creates Priority of residents
+        res.status(200);
+        res.send(fallObjs);
+      });
+    },
+  ]);
 };
