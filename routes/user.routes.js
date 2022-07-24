@@ -4,32 +4,49 @@ const db = require("../models/index.js");
 
 /* Algorithm to create priority*/
 function createPriority(id) {
-  //Promises te get the number of falls per resident
+  //create promises that store the get functions
+  let promise_latest_blood_sugar_levels = get_latest_blood_sugar_levels(id);
+  let promise_latest_temperature = get_latest_body_temperature(id);
   let promise_daily_falls_count = get_daily_number_falls(id);
   let promise_weekly_falls_count = get_weekly_number_falls(id);
   let promise_monthly_falls_count = get_monthly_number_falls(id);
-  let promise_latest_temperature = get_latest_body_temperature(id);
-  let promise_latest_blood_sugar_levels = get_latest_blood_sugar_levels(id);
 
   //create score board points
   let points_daily = 3;
   let points_weekly = 2;
   let points_monthly = 1;
+ 
 
   //create an array of Promises
   const allPromises = [
-    promise_latest_blood_sugar_levels,
-    promise_latest_temperature,
-    promise_daily_falls_count,
-    promise_weekly_falls_count,
-    promise_monthly_falls_count
-    
-    
+    promise_latest_blood_sugar_levels, //aValues[0]
+    promise_latest_temperature, //aValues[1]
+    promise_daily_falls_count, //aValues[2]
+    promise_weekly_falls_count, //aValues[3]
+    promise_monthly_falls_count //aValues[4]
   ];
 
-  //PENDING TO DO
+  //use Promises data values and create score board
   Promise.all(allPromises).then((aValues) => {
-    console.log(aValues);
+    let iBloodSugarLevels = aValues[0];
+    let iBodyTemperature = aValues[1];
+    let iDailyFalls = aValues[2];
+    let iWeeklyFalls = aValues[3];
+    let iMonthlyFalls = aValues[4];
+    
+    let iTotalNumberOfPoints = 0;
+    iTotalNumberOfPoints += (iDailyFalls * points_daily);
+    iTotalNumberOfPoints += (iWeeklyFalls * points_weekly);
+    iTotalNumberOfPoints += (iMonthlyFalls * points_monthly);
+
+    let iMediumTemp = 37;
+    let iHighTemp = 34;
+
+
+
+  
+
+
   });
 
 }
