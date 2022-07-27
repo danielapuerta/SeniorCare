@@ -42,14 +42,21 @@ function createPriority(id) {
     iTotalNumberOfPoints += (iDailyFalls * iPointsDaily);
     iTotalNumberOfPoints += (iWeeklyFalls * iPointsWeekly);
     iTotalNumberOfPoints += (iMonthlyFalls * iPointsMonthly);
-
-    if(iBodyTemperature <=33 || iBodyTemperature >= 38){
-      iTotalNumberOfPoints += iPointsHighTemp; 
-      console.log('High Priority' + iTotalNumberOfPoints);
-    }else if((iBodyTemperature >33 || iBodyTemperature <38) && (iBodyTemperature <35 && iBodyTemperature >36)){
-      iTotalNumberOfPoints += iPointsMediumTemp; 
-      console.log('Medium Priority' + iPointsMediumTemp);
+    
+    if(iBodyTemperature != 'Row not found'){
+      if(iBodyTemperature <=33 || iBodyTemperature >= 38){
+        iTotalNumberOfPoints += iPointsHighTemp; 
+        console.log('High Priority' + iTotalNumberOfPoints);
+      }else if((iBodyTemperature >33 || iBodyTemperature <38) && (iBodyTemperature <35 && iBodyTemperature >36)){
+        iTotalNumberOfPoints += iPointsMediumTemp; 
+        console.log('Medium Priority' + iPointsMediumTemp);
+      }
     }
+ 
+    if(iBloodSugarLevels  != 'Row not found'){
+        console.log('placeholder for sugar points code')
+    }
+    
   });
 
 }
@@ -123,6 +130,9 @@ function get_latest_body_temperature(id) {
       order: [["createdAt", "DESC"]], 
       limit: 1,
     }).then((aLatestTemperature) => {
+      if(aLatestTemperature.length == 0){
+        resolve("Row not found");
+      }
       resolve(aLatestTemperature[0].dataValues.BodyTemperature);
     });
   });
@@ -138,10 +148,7 @@ function get_latest_blood_sugar_levels(id) {
       limit: 1,
     }).then((aLatestBSL) => {
       if(aLatestBSL.length == 0){
-        //fix this problem what it should be return 
-        //in order to not have the error or having a empty array of objects
-        //this will be used for the three get functions
-        //the solution is in this file
+        resolve("Row not found");
       }
       resolve(aLatestBSL[0].dataValues.Levels);
     });
