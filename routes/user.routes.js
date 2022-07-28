@@ -16,10 +16,12 @@ function createPriority(id) {
   let iPointsWeekly = 2;
   let iPointsMonthly = 1;
 
-  //create score board points for Body Tempe
-  let iPointsHighTemp = 10;
-  let iPointsMediumTemp = 5;
- 
+  //create score board points for Body Temperature and Blood Sugar Levels
+  let iPointsHigh = 10;
+  let iPointsMedium = 5;
+
+  //var for total number of points
+  let iTotalNumberOfPoints = 0;
 
   //create an array of Promises
   const allPromises = [
@@ -32,34 +34,41 @@ function createPriority(id) {
 
   //use Promises data values and create score board
   Promise.all(allPromises).then((aValues) => {
+    //accesing to the vaues of the array of Promises
     let iBloodSugarLevels = aValues[0];
     let iBodyTemperature = aValues[1];
     let iDailyFalls = aValues[2];
     let iWeeklyFalls = aValues[3];
     let iMonthlyFalls = aValues[4];
 
-    let iTotalNumberOfPoints = 0;
     iTotalNumberOfPoints += (iDailyFalls * iPointsDaily);
     iTotalNumberOfPoints += (iWeeklyFalls * iPointsWeekly);
     iTotalNumberOfPoints += (iMonthlyFalls * iPointsMonthly);
     
     if(iBodyTemperature != 'Row not found'){
-      if(iBodyTemperature <=33 || iBodyTemperature >= 38){
-        iTotalNumberOfPoints += iPointsHighTemp; 
+      if(iBodyTemperature <=33 || iBodyTemperature >= 38){//high
+        iTotalNumberOfPoints += iPointsHigh; 
         console.log('High Priority' + iTotalNumberOfPoints);
-      }else if((iBodyTemperature >33 || iBodyTemperature <38) && (iBodyTemperature <35 && iBodyTemperature >36)){
-        iTotalNumberOfPoints += iPointsMediumTemp; 
-        console.log('Medium Priority' + iPointsMediumTemp);
+      }else if((iBodyTemperature >=34 || iBodyTemperature <=37) && (iBodyTemperature <35 && iBodyTemperature >36)){//medium
+        iTotalNumberOfPoints += iPointsMedium; 
+        console.log('Medium Priority' + iTotalNumberOfPoints);
       }
     }
  
+    //based on non diabetic people at the moment
     if(iBloodSugarLevels  != 'Row not found'){
-        console.log('placeholder for sugar points code')
+        console.log('placeholder for sugar points code');
+      if(iBloodSugarLevels <= 50 || iBloodSugarLevels >= 180 ){ //high
+        iTotalNumberOfPoints += iPointsHigh;
+      }else if((iBloodSugarLevels >=51 || iBloodSugarLevels <= 179) && (iBloodSugarLevels >90 && iBloodSugarLevels <150)){ //medium
+        iTotalNumberOfPoints += iPointsMedium;
+      }
     }
-    
+
   });
 
-}
+}//end of createPriority function
+
 //function to get daily number of fall per resident
 function get_daily_number_falls(id) {
   const moment = require("moment");
