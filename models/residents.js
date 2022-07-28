@@ -15,10 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Residents.init({
     Name: DataTypes.STRING,
-    Gender: DataTypes.STRING, //updated
     age: DataTypes.INTEGER,
     RoomNum: DataTypes.STRING,
-    Priority: DataTypes.INTEGER //updated
+    gender: DataTypes.STRING,
+    priority: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Residents',

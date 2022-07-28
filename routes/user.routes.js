@@ -65,6 +65,8 @@ function createPriority(id) {
       }
     }
 
+    db.Residents.update({priority: iTotalNumberOfPoints}, {where: {id : id}} )
+
   });
 
 }//end of createPriority function
@@ -141,8 +143,9 @@ function get_latest_body_temperature(id) {
     }).then((aLatestTemperature) => {
       if(aLatestTemperature.length == 0){
         resolve("Row not found");
+      }else{
+        resolve(aLatestTemperature[0].dataValues.BodyTemperature);
       }
-      resolve(aLatestTemperature[0].dataValues.BodyTemperature);
     });
   });
   return oPromiseLatestTemperature;
@@ -158,8 +161,9 @@ function get_latest_blood_sugar_levels(id) {
     }).then((aLatestBSL) => {
       if(aLatestBSL.length == 0){
         resolve("Row not found");
+      }else{
+        resolve(aLatestBSL[0].dataValues.Levels);
       }
-      resolve(aLatestBSL[0].dataValues.Levels);
     });
   });
   return oPromiseLatestBSLevels;
@@ -220,10 +224,9 @@ module.exports = function (app) {
         Name: req.body.Name,
         age: req.body.age,
         RoomNum: req.body.RoomNum,
-        Priority: req.body.Priority,
       };
       db.Residents.findOrCreate({
-        where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum, Priority: user.Priority },
+        where: { Name: user.Name, userage: user.age, RoomNum: user.RoomNum },
       }).then(([residentObj, created]) => {
         res.status(200);
         res.send("Resident Created successfully");
