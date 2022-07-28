@@ -204,7 +204,7 @@ module.exports = function (app) {
     authJwt.verifyToken,
     function (req, res) {
       let isAdmin = req.cookies["role"] == "admin";
-      db.Residents.findAll({ order: [["createdAt", "DESC"]] }).then(
+      db.Residents.findAll({ order: [["priority", "DESC"]] }).then(
         (residentObjs) => {
           res.render("residents", {
             residentObjs: residentObjs,
