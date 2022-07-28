@@ -60,7 +60,7 @@ function createPriority(id) {
         console.log('placeholder for sugar points code');
       if(iBloodSugarLevels <= 50 || iBloodSugarLevels >= 180 ){ //high
         iTotalNumberOfPoints += iPointsHigh;
-      }else if((iBloodSugarLevels >=51 || iBloodSugarLevels <= 179) && (iBloodSugarLevels >90 && iBloodSugarLevels <150)){ //medium
+      }else if( (iBloodSugarLevels >=51 && iBloodSugarLevels < 90) || (iBloodSugarLevels  <= 179 && iBloodSugarLevels > 150 )){ //medium
         iTotalNumberOfPoints += iPointsMedium;
       }
     }
@@ -220,9 +220,10 @@ module.exports = function (app) {
         Name: req.body.Name,
         age: req.body.age,
         RoomNum: req.body.RoomNum,
+        Priority: req.body.Priority,
       };
       db.Residents.findOrCreate({
-        where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum },
+        where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum, Priority: user.Priority },
       }).then(([residentObj, created]) => {
         res.status(200);
         res.send("Resident Created successfully");
