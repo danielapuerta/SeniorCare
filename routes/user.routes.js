@@ -226,7 +226,7 @@ module.exports = function (app) {
         RoomNum: req.body.RoomNum,
       };
       db.Residents.findOrCreate({
-        where: { Name: user.Name, userage: user.age, RoomNum: user.RoomNum },
+        where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum },
       }).then(([residentObj, created]) => {
         res.status(200);
         res.send("Resident Created successfully");
