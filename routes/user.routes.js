@@ -200,20 +200,23 @@ module.exports = function (app) {
   });
 
   //Residents list
-  app.get("/Residents", [
-    authJwt.verifyToken,
-    function (req, res) {
-      let isAdmin = req.cookies["role"] == "admin";
-      db.Residents.findAll({ order: [["priority", "DESC"]] }).then(
-        (residentObjs) => {
-          res.render("residents", {
-            residentObjs: residentObjs,
-            isAdmin: isAdmin,
-          });
-        }
-      );
-    },
-  ]);
+  // app.get("/Residents", [
+  //   authJwt.verifyToken,
+  //   function (req, res) {
+  //     let isAdmin = req.cookies["role"] == "admin";
+  //     db.Residents.findAll({ order: [["priority", "DESC"]] }).then(
+  //       (residentObjs) => {
+  //         res.render("residents", {
+  //           residentObjs: residentObjs,
+  //           isAdmin: isAdmin,
+  //         });
+  //       }
+  //     );
+  //   },
+  // ]);
+
+  //resident list
+  app.get("/Residents", authJwt.verifyToken, controller.Residents);
 
   // Create new Resident
   app.post("/api/createResident", [
