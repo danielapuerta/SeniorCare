@@ -1,31 +1,33 @@
-const db = require("../models");
-const config = require("../config/auth.config");
-const User = db.User;
+const db = require("../models"); //require database
+const config = require("../config/auth.config"); //require conf secret key
+const User = db.User; // User table in the database
+var jwt = require("jsonwebtoken"); //library to generate the token
+var bcrypt = require("bcryptjs"); //library to encrypt the password
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
-
+//req is the registration form in the view
 exports.signup = (req, res) => {
-  var role = "basic-user";
-
+  var role = "basic-user"; //everytime a new user registers, their role is set to basic-user
   //encrypt password
   console.log("Starting Encrypt Password");
-  const saltRounds = 10;
+  const saltRounds = 10; //number of times running the encryption algor
+  //create a Promise is to make sure when your request is done
+  //create a Promise in order to send the hashed pass to the database
   var oPasswordPromise = new Promise((resolve, reject) => {
+    //sending the password and number of times we want to run it through the algor
     bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+      //when it's done, this function will be called with the resolve function
       resolve(hash);
     });
   });
-
-  oPasswordPromise.then((value) => {
-    const user = {
+  oPasswordPromise.then((value) => {   //the value is the hashed password
+    const user = {     //create a user object to stored the data fields input by the user
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       nurseCode: req.body.nurseCode,
-      password: value,
-    };
+      password: value, //value is set equal to password
 
-    db.User.findOrCreate({
+    };
+    db.User.findOrCreate({ //create a a row of user in the User table
       where: {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -33,27 +35,24 @@ exports.signup = (req, res) => {
         password: user.password,
         role: role,
       },
-    })
-      .then(([userObj, created]) => {
+    }).then(([userObj, created]) => {
         //Generate Token
         var token = jwt.sign({ id: userObj.dataValues.id }, config.secret, {
           expiresIn: 86400, // 24 hours
         });
-
         let options = {
           path: "/",
           sameSite: true,
           maxAge: 1000 * 60 * 60 * 12, // would expire after 24 hours
           httpOnly: true, // The cookie only accessible by the web server
         };
-
         userObj.dataValues.accessToken = token;
         var returnUser = userObj.dataValues;
         res.cookie("x-access-token", token, options);
         res.cookie("role", userObj.dataValues.role, options);
         res.status(200);
         res.send({
-          returnUser,
+          returnUser,   //returning the user object
         });
       })
       .catch((err) => {
@@ -71,7 +70,7 @@ exports.signin = (req, res) => {
   db.User.findOne({ where: { nurseCode: user.nurseCode } })
     .then((userObj) => {
       if (userObj != undefined) {
-        //Compare passwords
+        //Compare passwords with bcrypt 
         var passwordIsValid = bcrypt.compareSync(
           user.password,
           userObj.dataValues.password
@@ -82,19 +81,16 @@ exports.signin = (req, res) => {
             message: "Invalid Password!",
           });
         }
-
         //Generate Token
         var token = jwt.sign({ id: userObj.dataValues.id }, config.secret, {
           expiresIn: 86400, // 24 hours
         });
-
         let options = {
           path: "/",
           sameSite: true,
-          maxAge: 1000 * 60 * 60 * 12, // would expire after 24 hours
+          maxAge: 1000 * 60 * 60 * 12, // would expire after 12 hours
           httpOnly: true, // The cookie only accessible by the web server
         };
-
         userObj.dataValues.accessToken = token;
         var returnUser = userObj.dataValues;
         res.cookie("x-access-token", token, options);
@@ -145,14 +141,12 @@ exports.makeBasicUser = (req, res) => {
 //delete a user
 exports.deleteUser = (req, res) => {
   var idUser = req.body.id;
-  db.User.destroy({ where: { id: idUser } }).then(
-    (userObj) => {
-      if (userObj != undefined) {
-        res.status(200);
-        res.send({
-          userObj,
-        });
-      }
+  db.User.destroy({ where: { id: idUser } }).then((userObj) => {
+    if (userObj != undefined) {
+      res.status(200);
+      res.send({
+        userObj,
+      });
     }
-  );
+  });
 };
