@@ -1,5 +1,8 @@
 const { verifySignUp } = require("../middleware");
 const controller = require("../controllers/auth.controller");
+const db = require("../models/index.js");
+const { authJwt } = require("../middleware");
+
 module.exports = function (app) {
   app.use(function (req, res, next) {
     res.header(
@@ -23,4 +26,10 @@ module.exports = function (app) {
 
   //delete user (only admin can do this task)
   app.post("/api/deleteUser", controller.deleteUser);
+
+  // Create new Resident
+  app.post("/api/createResident", authJwt.verifyToken, authJwt.isAdmin, controller.createResident);
+
+
+
 };

@@ -199,43 +199,8 @@ module.exports = function (app) {
     res.render("register");
   });
 
-  //Residents list
-  // app.get("/Residents", [
-  //   authJwt.verifyToken,
-  //   function (req, res) {
-  //     let isAdmin = req.cookies["role"] == "admin";
-  //     db.Residents.findAll({ order: [["priority", "DESC"]] }).then(
-  //       (residentObjs) => {
-  //         res.render("residents", {
-  //           residentObjs: residentObjs,
-  //           isAdmin: isAdmin,
-  //         });
-  //       }
-  //     );
-  //   },
-  // ]);
-
-  //resident list
+  //view resident list
   app.get("/Residents", authJwt.verifyToken, controller.Residents);
-
-  // Create new Resident
-  app.post("/api/createResident", [
-    authJwt.verifyToken,
-    authJwt.isAdmin,
-    function (req, res) {
-      const user = {
-        Name: req.body.Name,
-        age: req.body.age,
-        RoomNum: req.body.RoomNum,
-      };
-      db.Residents.findOrCreate({
-        where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum },
-      }).then(([residentObj, created]) => {
-        res.status(200);
-        res.send("Resident Created successfully");
-      });
-    },
-  ]);
 
   // view resident profile
   app.get("/ResidentProfile/:id", [

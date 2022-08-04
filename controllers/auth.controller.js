@@ -19,15 +19,17 @@ exports.signup = (req, res) => {
       resolve(hash);
     });
   });
-  oPasswordPromise.then((value) => {   //the value is the hashed password
-    const user = {     //create a user object to stored the data fields input by the user
+  oPasswordPromise.then((value) => {
+    //the value is the hashed password
+    const user = {
+      //create a user object to stored the data fields input by the user
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       nurseCode: req.body.nurseCode,
       password: value, //value is set equal to password
-
     };
-    db.User.findOrCreate({ //create a a row of user in the User table
+    db.User.findOrCreate({
+      //create a a row of user in the User table
       where: {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -35,7 +37,8 @@ exports.signup = (req, res) => {
         password: user.password,
         role: role,
       },
-    }).then(([userObj, created]) => {
+    })
+      .then(([userObj, created]) => {
         //Generate Token
         var token = jwt.sign({ id: userObj.dataValues.id }, config.secret, {
           expiresIn: 86400, // 24 hours
@@ -52,7 +55,7 @@ exports.signup = (req, res) => {
         res.cookie("role", userObj.dataValues.role, options);
         res.status(200);
         res.send({
-          returnUser,   //returning the user object
+          returnUser, //returning the user object
         });
       })
       .catch((err) => {
@@ -70,7 +73,7 @@ exports.signin = (req, res) => {
   db.User.findOne({ where: { nurseCode: user.nurseCode } })
     .then((userObj) => {
       if (userObj != undefined) {
-        //Compare passwords with bcrypt 
+        //Compare passwords with bcrypt
         var passwordIsValid = bcrypt.compareSync(
           user.password,
           userObj.dataValues.password
@@ -148,5 +151,22 @@ exports.deleteUser = (req, res) => {
         userObj,
       });
     }
+  });
+};
+
+//add new resident into the list
+exports.createResident = (req, res) => {
+  const user = {
+    Name: req.body.Name,
+    age: req.body.age,
+    RoomNum: req.body.RoomNum,
+  };
+  db.Residents.findOrCreate({
+    where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum },
+  }).then(([residentObj, created]) => {
+    res.status(200);
+    res.send({
+      residentObj,
+    });
   });
 };
