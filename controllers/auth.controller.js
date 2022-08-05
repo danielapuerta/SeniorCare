@@ -110,7 +110,27 @@ exports.signin = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
-
+exports.Nurses = (req, res) => {
+  let isAdmin = req.cookies["role"] == "admin";
+  let notAdmin = req.cookies["role"] != "admin";
+  db.User.findAll({ order: [["createdAt", "DESC"]] }).then((nurseObjs) => {
+    for (var i = 0; i < nurseObjs.length; i++) {
+      var nurse = nurseObjs[i];
+      var roleNurse = nurse.dataValues.role;
+      //adding a new column in datavalues object to check if it's admin
+      var isNurseAdmin = roleNurse == "admin";
+      nurse.dataValues.isAdmin = isNurseAdmin;
+      //adding a new column in datavalues object to check if it's basic user
+      var isNotNurseAdmin = roleNurse == "basic-user";
+      nurse.dataValues.isNotAdmin = isNotNurseAdmin;
+    }
+    res.render("nurses", {
+      nurseObjs: nurseObjs,
+      isAdmin: isAdmin,
+      notAdmin: notAdmin,
+    });
+  });
+};
 //make a basic-user an admin
 exports.makeAdmin = (req, res) => {
   var idAdmin = req.body.id;
@@ -170,3 +190,4 @@ exports.createResident = (req, res) => {
     });
   });
 };
+

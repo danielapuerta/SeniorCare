@@ -10,12 +10,22 @@ module.exports = function (app) {
     );
     next();
   });
+
+  //register
   app.post(
     "/api/auth/signup",
     [verifySignUp.checkDuplicateUsernameOrEmail],
     controller.signup
   );
+
+  //login
   app.post("/api/auth/signin", controller.signin);
+
+  // Create new Resident
+  app.post("/api/createResident", authJwt.verifyToken, authJwt.isAdmin, controller.createResident);
+
+  //view nurse list
+  app.get("/Nurses", authJwt.verifyToken, controller.Nurses);
 
   //make a basic-user an admin (only admin can do this task)
   app.post("/api/makeAdmin", controller.makeAdmin);
@@ -26,9 +36,6 @@ module.exports = function (app) {
   //delete user (only admin can do this task)
   app.post("/api/deleteUser", controller.deleteUser);
 
-  // Create new Resident
-  app.post("/api/createResident", authJwt.verifyToken, authJwt.isAdmin, controller.createResident);
-
-
+ 
 
 };
