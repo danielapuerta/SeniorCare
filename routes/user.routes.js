@@ -202,44 +202,8 @@ module.exports = function (app) {
   //view resident list
   app.get("/Residents", authJwt.verifyToken, controller.Residents);
 
-  // view resident profile
-  app.get("/ResidentProfile/:id", [
-    authJwt.verifyToken,
-    function (req, res) {
-      //view profile
-      db.Residents.findAll({
-        where: { id: req.params.id },
-        order: [["createdAt", "DESC"]],
-        limit: 1,
-      }).then((residentObj) => {
-        var parsedResidentObject = residentObj[0].dataValues;
-        //view blood sugar level records
-        db.BloodSugarLevels.findAll({
-          where: { PatientId: req.params.id },
-          order: [["createdAt", "DESC"]],
-        }).then((bloodSugarLevelObjs) => {
-          //view body temperature records
-          db.BodyTemperature.findAll({
-            where: { PatientId: req.params.id },
-            order: [["createdAt", "DESC"]],
-          }).then((bodyTemperatureObjs) => {
-            //view recent falls records
-            db.Falls.findAll({
-              where: { PatientId: req.params.id },
-              order: [["createdAt", "DESC"]],
-            }).then((fallObjs) => {
-              res.render("resident", {
-                residentObj: parsedResidentObject,
-                bloodSugarLevelObjs: bloodSugarLevelObjs,
-                bodyTemperatureObjs: bodyTemperatureObjs,
-                fallObjs: fallObjs,
-              });
-            });
-          });
-        });
-      });
-    },
-  ]);
+  // view and add data into resident profile
+  app.get("/ResidentProfile/:id", authJwt.verifyToken, controller.ResidentProfile);
 
   //view nurse list
   app.get("/Nurses", [
