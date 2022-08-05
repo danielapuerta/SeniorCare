@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const db = require("../models");
-const User = db.User;
+
 verifyToken = (req, res, next) => {
   console.log("Starting Verify Token");
   let token = req.headers["x-access-token"] || req.cookies['x-access-token'];
@@ -21,7 +21,7 @@ verifyToken = (req, res, next) => {
   });
 };
 isAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
+  db.User.findByPk(req.userId).then(user => {
     if (user.role == "admin") {
       next();
       return;

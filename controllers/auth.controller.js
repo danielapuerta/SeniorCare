@@ -1,6 +1,5 @@
 const db = require("../models"); //require database
 const config = require("../config/auth.config"); //require conf secret key
-const User = db.User; // User table in the database
 var jwt = require("jsonwebtoken"); //library to generate the token
 var bcrypt = require("bcryptjs"); //library to encrypt the password
 
