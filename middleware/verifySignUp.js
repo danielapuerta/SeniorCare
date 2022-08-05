@@ -3,7 +3,7 @@ const ROLES = db.ROLES;
 const User = db.User;
 
 //checking if the user is a member of the app
-checkDuplicateUsernameOrEmail = (req, res, next) => {
+checkDuplicateNurseCode = (req, res, next) => {
     // Username
     console.log("Starting Verify Nurse Code");
     User.findOne({
@@ -22,6 +22,6 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     });
   };
   const verifySignUp = {
-    checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail
+    checkDuplicateNurseCode: checkDuplicateNurseCode
   };
   module.exports = verifySignUp;

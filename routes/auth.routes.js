@@ -14,7 +14,7 @@ module.exports = function (app) {
   //register
   app.post(
     "/api/auth/signup",
-    [verifySignUp.checkDuplicateUsernameOrEmail],
+    [verifySignUp.checkDuplicateNurseCode],
     controller.signup
   );
 
