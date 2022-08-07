@@ -63,13 +63,33 @@
   </thead>
   <tbody>
     {{#each residentObjs}}
-    <tr data={{dataValues}}  class="table-row">
-      <td class='hidden'>{{dataValues.id}}</td>
-      <td>{{dataValues.Name}}</td>
-      <td>{{dataValues.age}}</td>
-      <td>{{dataValues.RoomNum}}</td>
-      <td>{{dataValues.priority}}</td>
-    </tr>
+      {{#if dataValues.highPriorityCategory}}
+          <tr data={{dataValues}}  class="table-danger">
+            <td class='hidden'>{{dataValues.id}}</td>
+            <td>{{dataValues.Name}}</td>
+            <td>{{dataValues.age}}</td>
+            <td>{{dataValues.RoomNum}}</td>
+            <td>{{dataValues.priority}}</td>
+          </tr>
+      {{/if}}
+      {{#if dataValues.mediumPriorityCategory}}
+          <tr data={{dataValues}}  class="table-warning">
+            <td class='hidden'>{{dataValues.id}}</td>
+            <td>{{dataValues.Name}}</td>
+            <td>{{dataValues.age}}</td>
+            <td>{{dataValues.RoomNum}}</td>
+            <td>{{dataValues.priority}}</td>
+          </tr>
+      {{/if}}
+      {{#if dataValues.lowPriorityCategory}}
+          <tr data={{dataValues}}  class="table-success">
+            <td class='hidden'>{{dataValues.id}}</td>
+            <td>{{dataValues.Name}}</td>
+            <td>{{dataValues.age}}</td>
+            <td>{{dataValues.RoomNum}}</td>
+            <td>{{dataValues.priority}}</td>
+          </tr>
+      {{/if}}
     {{/each}}
   </tbody>
 </table>
