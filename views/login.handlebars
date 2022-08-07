@@ -67,7 +67,7 @@
             $('#nurseCodeEmptyAlert').show();
         }
         else{
-            $('#nurseCodeEmptyAlert').close();
+            $('#nurseCodeEmptyAlert').hide();
         }
 
         var emptyPassword = user.password == "" || user.password == undefined;
@@ -76,7 +76,7 @@
             $('#passwordEmptyAlert').show();
         }
         else{
-            $('#passwordEmptyAlert').close();
+            $('#passwordEmptyAlert').hide();
         }
 
         if(!emptyPassword && !emptyNursecode){
