@@ -118,7 +118,15 @@
         });
     })
 
-  $(".table-row").click(function() {
+  $(".table-danger").click(function() {
+        var ID = $(this)[0].children[0].innerHTML;
+        window.location.href = '/ResidentProfile/' + ID;
+    });
+    $(".table-success").click(function() {
+        var ID = $(this)[0].children[0].innerHTML;
+        window.location.href = '/ResidentProfile/' + ID;
+    });
+    $(".table-warning").click(function() {
         var ID = $(this)[0].children[0].innerHTML;
         window.location.href = '/ResidentProfile/' + ID;
     });
