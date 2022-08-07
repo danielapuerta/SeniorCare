@@ -10,12 +10,20 @@
                             <input id="nurseCodeInput" name="nurseCode" type="text" placeholder="12345" class="form-control input-md">
                         </div>
                     </div>
+                    <div id="nurseCodeEmptyAlert" class="alert alert-danger collapse">
+                        Please provide a Nurse Code!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
 
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="passwordInput">Password</label>
                         <div class="col-md-4">
                             <input id="passwordInput" name="password" type="text" placeholder="password1234" class="form-control input-md">
                         </div>
+                    </div>
+                    <div id="passwordEmptyAlert" class="alert alert-danger alert-dismissible collapse">
+                        Please provide a password!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
 
                     <div class="form-group pt-4">
@@ -43,7 +51,26 @@
             password: $('input[name=password]').val()
         }
 
-        $.ajax({
+        var emptyNursecode = user.nurseCode == "" || user.nurseCode == undefined;
+
+        if(emptyNursecode){
+            $('#nurseCodeEmptyAlert').show();
+        }
+        else{
+            $('#nurseCodeEmptyAlert').close();
+        }
+
+        var emptyPassword = user.password == "" || user.password == undefined;
+
+        if(emptyPassword){
+            $('#passwordEmptyAlert').show();
+        }
+        else{
+            $('#passwordEmptyAlert').close();
+        }
+
+        if!emptyPassword && !emptyNursecode){
+            $.ajax({
             type: "POST",
             url: "/api/auth/signin",
             data: user,
@@ -57,6 +84,7 @@
                 console.log("User Not Found");
             }
         });
+        }
     })
 
     $('#registerButton').click(function(e){
