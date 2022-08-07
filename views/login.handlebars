@@ -26,6 +26,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
 
+                    <div id="userNotFoundAlert" class="alert alert-danger alert-dismissible collapse">
+                        No users with this Nurse Code exist!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <div id="invalidPasswordAlert" class="alert alert-danger alert-dismissible collapse">
+                        Incorrect Password Provided!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+
                     <div class="form-group pt-4">
                         <label class="col-md-4 control-label" for="signInButton"></label>
                         <div class="col-md-4">
@@ -69,7 +79,7 @@
             $('#passwordEmptyAlert').close();
         }
 
-        if!emptyPassword && !emptyNursecode){
+        if(!emptyPassword && !emptyNursecode){
             $.ajax({
             type: "POST",
             url: "/api/auth/signin",
@@ -79,9 +89,15 @@
                 console.log("User Found");
                 window.location.href = '/residents';
             },
-            error: function(){
+            error: function(error){
                 //TODO Add message user not found
                 console.log("User Not Found");
+                if(error.status == 401){
+                     $('#invalidPasswordAlert').show();
+                }
+                if(error.status == 404){
+                     $('#userNotFoundAlert').show();
+                }
             }
         });
         }
