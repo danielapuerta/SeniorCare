@@ -120,6 +120,7 @@
                     <h2>{{residentObj.Name}}</h2>
                     <p><strong>Age: </strong> {{residentObj.age}} </p>
                     <p><strong>Room: </strong> {{residentObj.RoomNum}} </p>
+                    <button type="button" id="trash_btn" class="btn btn-danger"><span class="bi bi-trash"></span></button>
                 </div>             
             </div>            
             <div class="row justify-content-center">
@@ -218,6 +219,21 @@
             console.log('server response is', msg.status);
             window.location.href = '/ResidentProfile/' + recentFalls.PatientId;
         },
+        });
+    })
+
+    $("#trash_btn").on("click",function(e){
+      e.preventDefault();
+
+        var ID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+
+        $.ajax({
+            type: "GET",
+            url: "/api/DeleteResidentProfile/"+ID,
+            success: function( msg ) {
+            console.log('server response is', msg.status);
+            window.location.href = '/residents';
+          },
         });
     })
 </script>

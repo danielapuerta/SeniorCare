@@ -75,3 +75,15 @@ exports.ResidentProfile = (req,res) =>{
   });
 }
 
+exports.deleteResident = (req, res) => {
+  var idUser = req.params.id;
+  db.Residents.destroy({ where: { id: idUser } }).then((userObj) => {
+    if (userObj != undefined) {
+      res.status(200);
+      res.send({
+        userObj,
+      });
+    }
+  });
+};
+

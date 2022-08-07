@@ -211,6 +211,9 @@ module.exports = function (app) {
   // view resident profile
   app.get("/ResidentProfile/:id", authJwt.verifyToken, controller.ResidentProfile);
 
+  // view resident profile
+  app.get("/api/DeleteResidentProfile/:id", authJwt.verifyToken, controller.deleteResident);
+
 
   //add blood sugar levels
   app.post("/api/addBloodSugarLevels", [
