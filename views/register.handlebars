@@ -9,12 +9,20 @@
                             <input id="firstNameInput" name="firstName" type="text" placeholder="Joe" class="form-control input-md">
                         </div>
                     </div>
+                    <div id="firstNameEmptyAlert" class="alert alert-danger collapse">
+                        Please provide a First Name!
+                        <button type="button" class="btn-close" ></button>
+                    </div>
 
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="lastNameInput">Last Name</label>
                         <div class="col-md-4">
                             <input id="lastNameInput" name="lastName" type="text" placeholder="Bloggs" class="form-control input-md" >
                         </div>
+                    </div>
+                    <div id="lastNameEmptyAlert" class="alert alert-danger collapse">
+                        Please provide a Last Name!
+                        <button type="button" class="btn-close" ></button>
                     </div>
 
                     <div class="form-group">
@@ -23,6 +31,10 @@
                             <input id="nurseCodeInput" name="nurseCode" type="text" placeholder="12345" class="form-control input-md">
                         </div>
                     </div>
+                    <div id="nurseCodeEmptyAlert" class="alert alert-danger collapse">
+                        Please provide a Nurse Code!
+                        <button type="button" class="btn-close" ></button>
+                    </div>
 
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="passwordInput">Password</label>
@@ -30,12 +42,20 @@
                             <input id="passwordInput" name="password" type="text" placeholder="password1234" class="form-control input-md">
                         </div>
                     </div>
+                    <div id="passwordEmptyAlert" class="alert alert-danger collapse">
+                        Please provide a password!
+                        <button type="button" class="btn-close" ></button>
+                    </div>
 
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="confirmPasswordInput">Confirm Password</label>
                         <div class="col-md-4">
                             <input id="confirmPasswordInput" name="confirmPassword" type="text" placeholder="password1234" class="form-control input-md">
                         </div>
+                    </div>
+                    <div id="passwordsMatchEmptyAlert" class="alert alert-danger collapse">
+                        Passwords are not matching!
+                        <button type="button" class="btn-close" ></button>
                     </div>
 
                     <div class="form-group pt-4">
@@ -63,17 +83,71 @@
             nurseCode: $('input[name=nurseCode]').val(),
             password: $('input[name=password]').val()
         }
+        
+        var matchingPassword =  $('input[name=confirmPassword]').val();
+        var validated = true;
 
-        $.ajax({
-            type: "POST",
-            url: "/api/auth/signup",
-            data: user,
-            success: function( msg ) {
-                console.log('server response is', msg.status);
-                window.location.href = '/residents';
-            },
-        });
+        var emptyFirstName = user.firstName == "" || user.firstName == undefined;
+        if(emptyFirstName){
+            $('#firstNameEmptyAlert').show();
+            validated = false;
+        }
+        else{
+            $('#firstNameEmptyAlert').hide();
+        }
+        
+        var emptyLastName = user.lastName == "" || user.lastName == undefined;
+        if(emptyLastName){
+            $('#lastNameEmptyAlert').show();
+            validated = false;
+        }
+        else{
+            $('#lastNameEmptyAlert').hide();
+        }
+
+        var emptyNursecode = user.nurseCode == "" || user.nurseCode == undefined;
+        if(emptyNursecode){
+            $('#nurseCodeEmptyAlert').show();
+            validated = false;
+        }
+        else{
+            $('#nurseCodeEmptyAlert').hide();
+        }
+
+        var emptyPassword = user.password == "" || user.password == undefined;
+        if(emptyPassword){
+            $('#passwordEmptyAlert').show();
+            validated = false;
+        }
+        else{
+            $('#passwordEmptyAlert').hide();
+        }
+
+        var matchingPassword = user.password == matchingPassword;
+        if(!matchingPassword){
+            $('#passwordsMatchEmptyAlert').show();
+            validated = false;
+        }
+        else{
+            $('#passwordsMatchEmptyAlert').hide();
+        }
+
+        if(validated){
+            $.ajax({
+                type: "POST",
+                url: "/api/auth/signup",
+                data: user,
+                success: function( msg ) {
+                    console.log('server response is', msg.status);
+                    window.location.href = '/residents';
+                },
+            });
+        }
     })
+
+    $('.btn-close').click(function(){
+        $(this).parent().hide();
+    });
 
     $('#cancelButton').click(function(e){
         e.preventDefault();
