@@ -12,7 +12,7 @@
                     </div>
                     <div id="nurseCodeEmptyAlert" class="alert alert-danger collapse">
                         Please provide a Nurse Code!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <button type="button" class="btn-close" ></button>
                     </div>
 
                     <div class="form-group">
@@ -23,16 +23,16 @@
                     </div>
                     <div id="passwordEmptyAlert" class="alert alert-danger alert-dismissible collapse">
                         Please provide a password!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <button type="button" class="btn-close" ></button>
                     </div>
 
                     <div id="userNotFoundAlert" class="alert alert-danger alert-dismissible collapse">
                         No users with this Nurse Code exist!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <button type="button" class="btn-close" ></button>
                     </div>
                     <div id="invalidPasswordAlert" class="alert alert-danger alert-dismissible collapse">
                         Incorrect Password Provided!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <button type="button" class="btn-close" ></button>
                     </div>
 
 
@@ -98,6 +98,10 @@
         });
         }
     })
+
+    $('.btn-close').click(function(){
+        $(this).parent().hide();
+    });
 
     $('#registerButton').click(function(e){
         e.preventDefault();
