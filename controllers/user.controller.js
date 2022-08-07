@@ -16,6 +16,7 @@ exports.Residents = (req, res) => {
   db.Residents.findAll({ order: [["priority", "DESC"]] }).then(
     (residentObjs) => {
       res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+      let today = new Date();
       for(var i = 0; i < residentObjs.length; i++){
         if(residentObjs[i].dataValues.priority < 5){
           residentObjs[i].dataValues.lowPriorityCategory = true;
@@ -26,6 +27,11 @@ exports.Residents = (req, res) => {
         else{
           residentObjs[i].dataValues.highPriorityCategory = true;
         }
+
+        var milliDiff = today.getTime() - residentObjs[i].updatedAt.getTime();
+        var minDiff = Math.floor(milliDiff / 60000);
+        residentObjs[i].dataValues.lastChecked = minDiff;
+
       }
       res.render("residents", {
         residentObjs: residentObjs,

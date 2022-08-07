@@ -57,7 +57,7 @@
       <th scope="col">Full Name</th>
       <th scope="col">Age</th>
       <th scope="col">Room Number</th>
-      <th scope="col">Priority</th>
+      <th scope="col">Last Checked(Mins)</th>
 
     </tr>
   </thead>
@@ -69,7 +69,7 @@
             <td>{{dataValues.Name}}</td>
             <td>{{dataValues.age}}</td>
             <td>{{dataValues.RoomNum}}</td>
-            <td>{{dataValues.priority}}</td>
+            <td>{{dataValues.lastChecked}}</td>
           </tr>
       {{/if}}
       {{#if dataValues.mediumPriorityCategory}}
@@ -78,7 +78,7 @@
             <td>{{dataValues.Name}}</td>
             <td>{{dataValues.age}}</td>
             <td>{{dataValues.RoomNum}}</td>
-            <td>{{dataValues.priority}}</td>
+            <td>{{dataValues.lastChecked}}</td>
           </tr>
       {{/if}}
       {{#if dataValues.lowPriorityCategory}}
@@ -87,7 +87,7 @@
             <td>{{dataValues.Name}}</td>
             <td>{{dataValues.age}}</td>
             <td>{{dataValues.RoomNum}}</td>
-            <td>{{dataValues.priority}}</td>
+            <td>{{dataValues.lastChecked}}</td>
           </tr>
       {{/if}}
     {{/each}}
