@@ -15,6 +15,7 @@ exports.Residents = (req, res) => {
   let isAdmin = req.cookies["role"] == "admin";
   db.Residents.findAll({ order: [["priority", "DESC"]] }).then(
     (residentObjs) => {
+      res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
       res.render("residents", {
         residentObjs: residentObjs,
         isAdmin: isAdmin,
