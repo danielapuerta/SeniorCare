@@ -85,13 +85,9 @@
             url: "/api/auth/signin",
             data: user,
             success: function(data, status, settings) {
-                 //TODO Add message user found
-                console.log("User Found");
                 window.location.href = '/residents';
             },
             error: function(error){
-                //TODO Add message user not found
-                console.log("User Not Found");
                 if(error.status == 401){
                      $('#invalidPasswordAlert').show();
                 }
