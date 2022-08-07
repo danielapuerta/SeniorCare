@@ -179,6 +179,7 @@ exports.createResident = (req, res) => {
     Name: req.body.Name,
     age: req.body.age,
     RoomNum: req.body.RoomNum,
+    priority: 0
   };
   db.Residents.findOrCreate({
     where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum },
