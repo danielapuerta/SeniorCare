@@ -40,10 +40,16 @@ function createPriority(id) {
     let iDailyFalls = aValues[2];
     let iWeeklyFalls = aValues[3];
     let iMonthlyFalls = aValues[4];
+    let iTotalFalls = iDailyFalls + iWeeklyFalls + iMonthlyFalls;
+    let iTotalFallPoints = 0;
 
-    iTotalNumberOfPoints += (iDailyFalls * iPointsDaily);
-    iTotalNumberOfPoints += (iWeeklyFalls * iPointsWeekly);
-    iTotalNumberOfPoints += (iMonthlyFalls * iPointsMonthly);
+    iTotalFallPoints += (iDailyFalls * iPointsDaily);
+    iTotalFallPoints += (iWeeklyFalls * iPointsWeekly);
+    iTotalFallPoints += (iMonthlyFalls * iPointsMonthly);
+
+    iTotalNumberOfPoints = parseInt(iTotalFallPoints/iTotalFalls);
+
+    
     
     if(iBodyTemperature != 'Row not found'){
       if(iBodyTemperature <=33 || iBodyTemperature >= 38){//high
