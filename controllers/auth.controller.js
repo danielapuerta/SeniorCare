@@ -182,7 +182,7 @@ exports.createResident = (req, res) => {
     priority: 0
   };
   db.Residents.findOrCreate({
-    where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum },
+    where: { Name: user.Name, age: user.age, RoomNum: user.RoomNum, priority: user.priority },
   }).then(([residentObj, created]) => {
     res.status(200);
     res.send({
