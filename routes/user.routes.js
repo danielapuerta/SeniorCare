@@ -47,7 +47,13 @@ function createPriority(id) {
     iTotalFallPoints += (iWeeklyFalls * iPointsWeekly);
     iTotalFallPoints += (iMonthlyFalls * iPointsMonthly);
 
-    iTotalNumberOfPoints = parseInt(iTotalFallPoints/iTotalFalls);
+    if(iTotalFalls > 0){
+      iTotalNumberOfPoints = parseInt(iTotalFallPoints/iTotalFalls);
+    }
+    else{
+      iTotalNumberOfPoints = iTotalFallPoints;
+    }
+    
 
     
     
