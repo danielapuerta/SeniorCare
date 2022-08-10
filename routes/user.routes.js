@@ -58,10 +58,10 @@ function createPriority(id) {
     
     
     if(iBodyTemperature != 'Row not found'){
-      if(iBodyTemperature <=33 || iBodyTemperature >= 38){//high
+      if(iBodyTemperature <=33 || iBodyTemperature >= 39){//high
         iTotalNumberOfPoints += iPointsHigh; 
         console.log('High Priority' + iTotalNumberOfPoints);
-      }else if((iBodyTemperature >=34 || iBodyTemperature <=37) && (iBodyTemperature <35 && iBodyTemperature >36)){//medium
+      }else if((iBodyTemperature >=34 || iBodyTemperature <=38) || (iBodyTemperature <35 && iBodyTemperature >37)){//medium
         iTotalNumberOfPoints += iPointsMedium; 
         console.log('Medium Priority' + iTotalNumberOfPoints);
       }
