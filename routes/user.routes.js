@@ -11,18 +11,6 @@ function createPriority(id) {
   let promise_weekly_falls_count = get_weekly_number_falls(id);
   let promise_monthly_falls_count = get_monthly_number_falls(id);
 
-  //create score board points for Falls
-  let iPointsDaily = 3;
-  let iPointsWeekly = 2;
-  let iPointsMonthly = 1;
-
-  //create score board points for Body Temperature and Blood Sugar Levels
-  let iPointsHigh = 10;
-  let iPointsMedium = 5;
-
-  //var for total number of points
-  let iTotalNumberOfPoints = 0;
-
   //create an array of Promises
   const allPromises = [
     promise_latest_blood_sugar_levels, //aValues[0]
@@ -41,21 +29,30 @@ function createPriority(id) {
     let iWeeklyFalls = aValues[3];
     let iMonthlyFalls = aValues[4];
     let iTotalFalls = iDailyFalls + iWeeklyFalls + iMonthlyFalls;
-    let iTotalFallPoints = 0;
-
+    //create score board points for Falls
+    let iPointsDaily = 3;
+    let iPointsWeekly = 2;
+    let iPointsMonthly = 1;
+    //create score board points for Body Temperature and Blood Sugar Levels
+    let iPointsHigh = 10;
+    let iPointsMedium = 5;
+    //var to store the total num of fall and multiply it by points
+    let iTotalFallPoints = 0; 
+    //var for TOTAL number of points and to be shown in the priority column
+    let iTotalNumberOfPoints = 0;
+    //getting the total points of fall daily, weekly and monthly
     iTotalFallPoints += (iDailyFalls * iPointsDaily);
     iTotalFallPoints += (iWeeklyFalls * iPointsWeekly);
     iTotalFallPoints += (iMonthlyFalls * iPointsMonthly);
 
+
     if(iTotalFalls > 0){
+      //get the average parsed as an integer
       iTotalNumberOfPoints = parseInt(iTotalFallPoints/iTotalFalls);
     }
     else{
       iTotalNumberOfPoints = iTotalFallPoints;
     }
-    
-
-    
     
     if(iBodyTemperature != 'Row not found'){
       if(iBodyTemperature <=33 || iBodyTemperature >= 39){//high
