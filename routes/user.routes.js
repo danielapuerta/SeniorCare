@@ -5,11 +5,12 @@ const db = require("../models/index.js");
 /* Algorithm to create priority*/
 function createPriority(id) {
   //create promises that store the get functions
-  let promise_latest_blood_sugar_levels = get_latest_blood_sugar_levels(id);
-  let promise_latest_temperature = get_latest_body_temperature(id);
   let promise_daily_falls_count = get_daily_number_falls(id);
   let promise_weekly_falls_count = get_weekly_number_falls(id);
   let promise_monthly_falls_count = get_monthly_number_falls(id);
+  let promise_latest_blood_sugar_levels = get_latest_blood_sugar_levels(id);
+  let promise_latest_temperature = get_latest_body_temperature(id);
+
 
   //create an array of Promises
   const allPromises = [

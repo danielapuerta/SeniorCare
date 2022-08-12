@@ -18,14 +18,15 @@ exports.Residents = (req, res) => {
       res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
       let today = new Date(); 
       for(var i = 0; i < residentObjs.length; i++){
-        if(residentObjs[i].dataValues.priority < 5){//low priority - green color 
+        //low priority - green color 
+        if(residentObjs[i].dataValues.priority < 5){
           residentObjs[i].dataValues.lowPriorityCategory = true;
-        }
-        else if(residentObjs[i].dataValues.priority < 10){ // medium priority - yellow color 
+        }//medium priority - yellow color 
+        else if(residentObjs[i].dataValues.priority < 10){ 
           residentObjs[i].dataValues.mediumPriorityCategory = true;
         }
-        else{
-          residentObjs[i].dataValues.highPriorityCategory = true; // high priority - red color 
+        else{//high priority - red color
+          residentObjs[i].dataValues.highPriorityCategory = true;  
         }
 
         var milliDiff = today.getTime() - residentObjs[i].updatedAt.getTime();
