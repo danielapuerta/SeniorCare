@@ -1,5 +1,6 @@
 <!-- Modal for Blood Sugar Levels -->
-<div class="modal fade" id="addBloodSugarLevelsModal" tabindex="-1" role="dialog" aria-labelledby="addBloodSugarLevels" aria-hidden="true">
+<div class="modal fade" id="addBloodSugarLevelsModal" tabindex="-1" role="dialog" aria-labelledby="addBloodSugarLevels"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -11,19 +12,20 @@
       <div class="modal-body">
         <div class="container">
           <div class="row justify-content-center">
-              <div >
-                <form id="residentForm" class="form-horizontal">
-                        <fieldset>
+            <div>
+              <form id="residentForm" class="form-horizontal">
+                <fieldset>
 
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="bloodSugarLevelsInput">Blood Sugar Levels</label>
-                                <div class="col-md-4">
-                                    <input id="bloodSugarLevelsInput" name="bloodSugarLevels" type="text" placeholder="140 mg/dL" class="form-control input-md">
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-              </div>
+                  <div class="form-group">
+                    <label class="col-md-4 control-label" for="bloodSugarLevelsInput">Blood Sugar Levels</label>
+                    <div class="col-md-4">
+                      <input id="bloodSugarLevelsInput" name="bloodSugarLevels" type="text" placeholder="140 mg/dL"
+                        class="form-control input-md">
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -36,7 +38,8 @@
 </div>
 
 <!-- Modal for Body Temperature -->
-<div class="modal fade" id="addBodyTemperatureModal" tabindex="-1" role="dialog" aria-labelledby="addBloodSugarLevels" aria-hidden="true">
+<div class="modal fade" id="addBodyTemperatureModal" tabindex="-1" role="dialog" aria-labelledby="addBloodSugarLevels"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -48,19 +51,20 @@
       <div class="modal-body">
         <div class="container">
           <div class="row justify-content-center">
-              <div >
-                <form id="residentForm" class="form-horizontal">
-                        <fieldset>
+            <div>
+              <form id="residentForm" class="form-horizontal">
+                <fieldset>
 
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="bodyTemperatureInput">Body Temperature</label>
-                                <div class="col-md-4">
-                                    <input id="bodyTemperatureInput" name="bodyTemperature" type="text" placeholder="36°C" class="form-control input-md">
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-              </div>
+                  <div class="form-group">
+                    <label class="col-md-4 control-label" for="bodyTemperatureInput">Body Temperature</label>
+                    <div class="col-md-4">
+                      <input id="bodyTemperatureInput" name="bodyTemperature" type="text" placeholder="36°C"
+                        class="form-control input-md">
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -73,7 +77,8 @@
 </div>
 
 <!-- Modal for Recent Falls -->
-<div class="modal fade" id="addFallsModal" tabindex="-1" role="dialog" aria-labelledby="addBloodSugarLevels" aria-hidden="true">
+<div class="modal fade" id="addFallsModal" tabindex="-1" role="dialog" aria-labelledby="addBloodSugarLevels"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -85,20 +90,20 @@
       <div class="modal-body">
         <div class="container">
           <div class="row justify-content-center">
-              <div >
-                <form id="residentForm" class="form-horizontal">
-                        <fieldset>
+            <div>
+              <form id="residentForm" class="form-horizontal">
+                <fieldset>
 
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="recentFallsInput">Recent Falls</label>
-                                <div class="col-md-4">
-                                    <input id="recentFallsInput" name="recentFalls" type="datetime-local" placeholder="2022-07-21T19:32 " 
-                                    class="form-control input-md">
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-              </div>
+                  <div class="form-group">
+                    <label class="col-md-4 control-label" for="recentFallsInput">Recent Falls</label>
+                    <div class="col-md-4">
+                      <input id="recentFallsInput" name="recentFalls" type="datetime-local"
+                        placeholder="2022-07-21T19:32 " class="form-control input-md">
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -112,128 +117,129 @@
 
 {{!-- Container for the records of: BloodSugarLevels, Temperature and Falls--}}
 <div class="container">
-	<div class="row">
-		<div>
-    	 <div class="well profile">
-            <div >
-                <div >
-                    <h2>{{residentObj.Name}}</h2>
-                    <p><strong>Age: </strong> {{residentObj.age}} </p>
-                    <p><strong>Room: </strong> {{residentObj.RoomNum}} </p>
-                    <button type="button" id="trash_btn" class="btn btn-danger"><span class="bi bi-trash"></span></button>
-                </div>             
-            </div>            
-            <div class="row justify-content-center">
-                <div class="col-md-4 emphasis">                    
-                    <p><strong>Blood Sugar Level - mg/dL</strong></p>
-                    <ul class="list-group">
-                        
-                        {{#each bloodSugarLevelObjs}}
-                            <li class="list-group-item">{{this.dataValues.Levels}}</li>  
-                        {{/each}}
-                        
-                    </ul>
-                    <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addBloodSugarLevelsModal">
-                      <span class="fa fa-plus-circle"></span> </button>
-                </div>
-                <div class="col-md-4 emphasis">                  
-                    <p><strong>Body Temperature - °C</strong></p>
-                    <ul class="list-group">
-                       {{#each bodyTemperatureObjs}}
-                            <li class="list-group-item">{{this.dataValues.BodyTemperature}}</li>  
-                        {{/each}}
-                    </ul>
-                    <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addBodyTemperatureModal">
-                      <span class="fa fa-plus-circle"></span> </button>
-                </div>
-                <div class="col-md-4 emphasis"               
-                    <p><strong>Recent Falls </strong></p>
-                     <ul class="list-group">
-                        {{#each fallObjs}}
-                            <li class="list-group-item">{{this.dataValues.DateTime_Fall}}</li>  
-                        {{/each}}
+  <div class="row">
+    <div>
+      <div class="well profile">
+        <div>
+          <div>
+            <h2>{{residentObj.Name}}</h2>
+            <p><strong>Age: </strong> {{residentObj.age}} </p>
+            <p><strong>Room: </strong> {{residentObj.RoomNum}} </p>
+            <button type="button" id="trash_btn" class="btn btn-danger"><span class="bi bi-trash"></span></button>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-4 emphasis">
+            <p><strong>Blood Sugar Level - mg/dL</strong></p>
+            <ul class="list-group">
 
-                    </ul>
-                    <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addFallsModal">
-                      <span class="fa fa-plus-circle"></span> </button>
-                </div>
-            </div>
-    	 </div>                 
-		</div>
-	</div>
+              {{#each bloodSugarLevelObjs}}
+              <li class="list-group-item">{{this.dataValues.Levels}}</li>
+              {{/each}}
+
+            </ul>
+            <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addBloodSugarLevelsModal">
+              <span class="fa fa-plus-circle"></span> </button>
+          </div>
+          <div class="col-md-4 emphasis">
+            <p><strong>Body Temperature - °C</strong></p>
+            <ul class="list-group">
+              {{#each bodyTemperatureObjs}}
+              <li class="list-group-item">{{this.dataValues.BodyTemperature}}</li>
+              {{/each}}
+            </ul>
+            <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addBodyTemperatureModal">
+              <span class="fa fa-plus-circle"></span> </button>
+          </div>
+          <div class="col-md-4 emphasis"> 
+            <p><strong>Recent Falls</strong></p>
+            <ul class="list-group">
+              {{#each fallObjs}}
+              <li class="list-group-item">{{this.dataValues.DateTime_Fall}}</li>
+              {{/each}}
+
+            </ul>
+            <button class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addFallsModal">
+              <span class="fa fa-plus-circle"></span> 
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 
 
 <script>
-    //blood sugar 
-    $('#addBloodSugarLevels_Button').click(function(e){
-        e.preventDefault();
-        var bloodSugarLevels = {
-            Levels : $('input[name=bloodSugarLevels]').val(),
-            PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-        }
-        $.ajax({
-        type: "POST",
-        url: "/api/addBloodSugarLevels",
-        data: bloodSugarLevels,
-        success: function( msg ) {
-            var id = msg.PatientId;
-            console.log('server response is', msg.status);
-            window.location.href = '/ResidentProfile/' + bloodSugarLevels.PatientId;
-        },
-        });
-    })
-    //body temperature
-    $('#addBodyTemperature_Button').click(function(e){
-        e.preventDefault();
-        var bodyTemperature = {
-            BodyTemperature : $('input[name=bodyTemperature]').val(),
-            PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-        }
-        $.ajax({
-        type: "POST",
-        url: "/api/addBodyTemperature",
-        data: bodyTemperature,
-        success: function( msg ) {
-            var id = msg.PatientId;
-            console.log('server response is', msg.status);
-            window.location.href = '/ResidentProfile/' + bodyTemperature.PatientId;
-        },
-        });
+  //blood sugar 
+  $('#addBloodSugarLevels_Button').click(function (e) {
+    e.preventDefault();
+    var bloodSugarLevels = {
+      Levels: $('input[name=bloodSugarLevels]').val(),
+      PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    }
+    $.ajax({
+      type: "POST",
+      url: "/api/addBloodSugarLevels",
+      data: bloodSugarLevels,
+      success: function (msg) {
+        var id = msg.PatientId;
+        console.log('server response is', msg.status);
+        window.location.href = '/ResidentProfile/' + bloodSugarLevels.PatientId;
+      },
     });
-    //recent falls
-    $('#addRecentFalls_Button').click(function(e){
-        e.preventDefault();
-        console.log("test");
-        var recentFalls = {
-            DateTime_Fall : $('input[name=recentFalls]').val(),
-            PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-        }
-        $.ajax({
-        type: "POST",
-        url: "/api/addRecentFalls",
-        data: recentFalls,
-        success: function( msg ) {
-            var id = msg.PatientId;
-            console.log('server response is', msg.status);
-            window.location.href = '/ResidentProfile/' + recentFalls.PatientId;
-        },
-        });
-    })
+  })
+  //body temperature
+  $('#addBodyTemperature_Button').click(function (e) {
+    e.preventDefault();
+    var bodyTemperature = {
+      BodyTemperature: $('input[name=bodyTemperature]').val(),
+      PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    }
+    $.ajax({
+      type: "POST",
+      url: "/api/addBodyTemperature",
+      data: bodyTemperature,
+      success: function (msg) {
+        var id = msg.PatientId;
+        console.log('server response is', msg.status);
+        window.location.href = '/ResidentProfile/' + bodyTemperature.PatientId;
+      },
+    });
+  });
+  //recent falls
+  $('#addRecentFalls_Button').click(function (e) {
+    e.preventDefault();
+    console.log("test");
+    var recentFalls = {
+      DateTime_Fall: $('input[name=recentFalls]').val(),
+      PatientId: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    }
+    $.ajax({
+      type: "POST",
+      url: "/api/addRecentFalls",
+      data: recentFalls,
+      success: function (msg) {
+        var id = msg.PatientId;
+        console.log('server response is', msg.status);
+        window.location.href = '/ResidentProfile/' + recentFalls.PatientId;
+      },
+    });
+  })
 
-    $("#trash_btn").on("click",function(e){
-      e.preventDefault();
+  $("#trash_btn").on("click", function (e) {
+    e.preventDefault();
 
-        var ID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+    var ID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
 
-        $.ajax({
-            type: "GET",
-            url: "/api/DeleteResidentProfile/"+ID,
-            success: function( msg ) {
-            console.log('server response is', msg.status);
-            window.location.href = '/residents';
-          },
-        });
-    })
+    $.ajax({
+      type: "GET",
+      url: "/api/DeleteResidentProfile/" + ID,
+      success: function (msg) {
+        console.log('server response is', msg.status);
+        window.location.href = '/residents';
+      },
+    });
+  })
 </script>
