@@ -59,7 +59,7 @@ function createPriority(id) {
       if(iBodyTemperature <=33 || iBodyTemperature >= 39){//high
         iTotalNumberOfPoints += iPointsHigh; 
         console.log('High Priority' + iTotalNumberOfPoints);
-      }else if((iBodyTemperature >=34 || iBodyTemperature <=38) || (iBodyTemperature <35 && iBodyTemperature >37)){//medium
+      }else if((iBodyTemperature ==34 || iBodyTemperature ==38) && (iBodyTemperature <35 || iBodyTemperature >37)){//medium
         iTotalNumberOfPoints += iPointsMedium; 
         console.log('Medium Priority' + iTotalNumberOfPoints);
       }
@@ -194,6 +194,7 @@ module.exports = function (app) {
     authJwt.isAdmin,
     controller.adminContent,
   ]);
+
 
   //login
   app.get("/", function (req, res) {
