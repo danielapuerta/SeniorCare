@@ -31,8 +31,8 @@ function createPriority(id) {
     let iMonthlyFalls = aValues[4];
     let iTotalFalls = iDailyFalls + iWeeklyFalls + iMonthlyFalls;
     //create score board points for Falls
-    let iPointsDaily = 3;
-    let iPointsWeekly = 2;
+    let iPointsDaily = 10;
+    let iPointsWeekly = 5;
     let iPointsMonthly = 1;
     //create score board points for Body Temperature and Blood Sugar Levels
     let iPointsHigh = 10;
@@ -107,6 +107,8 @@ function get_daily_number_falls(id) {
 function get_weekly_number_falls(id) {
   const Op = require("sequelize").Op;
   const today = new Date();
+  const day = 1000 * 60 * 60 * 24 * 1;//day in milliseconds
+  const end_date = new Date(today.getTime() - day);
   const week = 1000 * 60 * 60 * 24 * 7; //week in milliseconds
   const today_minus_7_days = new Date(today.getTime() - week);
 
@@ -114,7 +116,7 @@ function get_weekly_number_falls(id) {
     db.Falls.count({
       where: {
         PatientId: id,
-        DateTime_Fall: { [Op.between]: [today_minus_7_days, today] },
+        DateTime_Fall: { [Op.between]: [today_minus_7_days, end_date] },
       },
     }).then((count_weekly_falls) => {
       resolve(count_weekly_falls);
@@ -127,6 +129,8 @@ function get_weekly_number_falls(id) {
 function get_monthly_number_falls(id) {
   const Op = require("sequelize").Op;
   const today = new Date();
+  const week = 1000 * 60 * 60 * 24 * 7; //week in milliseconds
+  const end_date = new Date(today.getTime() - week);
   const month = 1000 * 60 * 60 * 24 * 30; //months in milliseconds, 30 days as example
   const today_minus_30_days = new Date(today.getTime() - month);
 
@@ -134,7 +138,7 @@ function get_monthly_number_falls(id) {
     db.Falls.count({
       where: {
         PatientId: id,
-        DateTime_Fall: { [Op.between]: [today_minus_30_days, today] },
+        DateTime_Fall: { [Op.between]: [today_minus_30_days, end_date] },
       },
     }).then((count_monthly_falls) => {
       resolve(count_monthly_falls);
